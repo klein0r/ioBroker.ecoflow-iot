@@ -1,8 +1,22 @@
 {
   "common": {
     "name": "ecoflow-iot",
-    "version": "0.0.3",
-    "news": {},
+    "version": "0.0.4",
+    "news": {
+      "0.0.4": {
+        "en": "initial release",
+        "de": "erstausstrahlung",
+        "ru": "первоначальный выпуск",
+        "pt": "lançamento inicial",
+        "nl": "eerste release",
+        "fr": "libération initiale",
+        "it": "rilascio iniziale",
+        "es": "liberación inicial",
+        "pl": "początkowe zwolnienie",
+        "uk": "початковий реліз",
+        "zh-cn": "初步释放"
+      }
+    },
     "titleLang": {
       "en": "EcoFlow IoT",
       "de": "EcoFlow IoT",
