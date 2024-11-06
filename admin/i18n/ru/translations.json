@@ -1,5 +1,6 @@
 {
-    "ecoflow-iot adapter settings": "Настройки адаптера для ecoflow-iot",
-    "option1": "вариант 1",
-    "option2": "вариант 2"
+    "Options": "Параметры",
+    "Access Key": "Ключ доступа",
+    "Secret Key": "Секретный ключ",
+    "Support this project": "Поддержите этот проект"
 }

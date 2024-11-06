@@ -72,18 +72,26 @@
         },
         "dependencies": [
             {
-                "js-controller": ">=6.0.11"
+                "js-controller": ">=5.0.19"
             }
         ],
         "globalDependencies": [
             {
-                "admin": "7.0.23"
+                "admin": ">=6.6.0"
             }
         ]
     },
+    "protectedNative": [
+        "accessKey",
+        "secretKey"
+    ],
+    "encryptedNative": [
+        "accessKey",
+        "secretKey"
+    ],
     "native": {
-        "option1": true,
-        "option2": "42"
+        "accessKey": "",
+        "secretKey": ""
     },
     "objects": [],
     "instanceObjects": [
@@ -91,7 +99,17 @@
             "_id": "info",
             "type": "channel",
             "common": {
-                "name": "Information"
+                "en": "Information",
+                "de": "Information",
+                "ru": "Информация",
+                "pt": "Em formação",
+                "nl": "Informatie",
+                "fr": "Informations",
+                "it": "Informazione",
+                "es": "Información",
+                "pl": "Informacja",
+                "uk": "Інформація",
+                "zh-cn": "信息"
             },
             "native": {}
         },
@@ -99,9 +117,21 @@
             "_id": "info.connection",
             "type": "state",
             "common": {
-                "role": "indicator.connected",
-                "name": "Device or service connected",
+                "name": {
+                    "en": "Connected to EcoFlow IoT API",
+                    "de": "Mit EcoFlow IoT API verbunden",
+                    "ru": "Подключен к EcoFlow IoT API",
+                    "pt": "Conectado à API EcoFlow IoT",
+                    "nl": "Verbonden met EcoFlow IoT API",
+                    "fr": "Connecté à l'API IoT EcoFlow",
+                    "it": "Collegato a EcoFlow IoT API",
+                    "es": "Conectado a EcoFlow IoT API",
+                    "pl": "Połączony z API EcoFlow IoT",
+                    "uk": "Підключення до API EcoFlow IoT",
+                    "zh-cn": "已连接到 EcoFlow IoT API"
+                },
                 "type": "boolean",
+                "role": "indicator.connected",
                 "read": true,
                 "write": false,
                 "def": false
