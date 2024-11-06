@@ -1,0 +1,42 @@
+{
+    "cli": true,
+    "target": "directory",
+    "adapterName": "ecoflow-iot",
+    "title": "EcoFlow IoT",
+    "description": "Control EcoFlow devices via the official web api",
+    "keywords": [
+        "ecoflow",
+        "battery",
+        "iot"
+    ],
+    "expert": "yes",
+    "features": [
+        "adapter"
+    ],
+    "adminFeatures": [],
+    "type": "household",
+    "startMode": "daemon",
+    "connectionType": "cloud",
+    "dataSource": "push",
+    "connectionIndicator": "yes",
+    "language": "TypeScript",
+    "nodeVersion": "18",
+    "adminUi": "json",
+    "tools": [
+        "ESLint"
+    ],
+    "releaseScript": "yes",
+    "devServer": "yes",
+    "devServerPort": 8081,
+    "indentation": "Space (4)",
+    "quotes": "single",
+    "authorName": "Matthias Kleine",
+    "authorGithub": "klein0r",
+    "authorEmail": "info@haus-automatisierung.com",
+    "gitRemoteProtocol": "SSH",
+    "gitCommit": "yes",
+    "defaultBranch": "main",
+    "license": "MIT License",
+    "dependabot": "yes",
+    "creatorVersion": "2.6.5"
+}

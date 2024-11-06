@@ -1,0 +1,112 @@
+{
+    "common": {
+        "name": "ecoflow-iot",
+        "version": "0.0.1",
+        "news": {
+            "0.0.1": {
+                "en": "initial release",
+                "de": "Erstveröffentlichung",
+                "ru": "Начальная версия",
+                "pt": "lançamento inicial",
+                "nl": "Eerste uitgave",
+                "fr": "Première version",
+                "it": "Versione iniziale",
+                "es": "Versión inicial",
+                "pl": "Pierwsze wydanie",
+                "uk": "Початкова версія",
+                "zh-cn": "首次出版"
+            }
+        },
+        "titleLang": {
+            "en": "EcoFlow IoT",
+            "de": "EcoFlow IoT",
+            "ru": "ЭкоФлоу Интернет вещей",
+            "pt": "EcoFlow IoT",
+            "nl": "EcoFlow IoT",
+            "fr": "EcoFlow IoT",
+            "it": "EcoFlowIoT",
+            "es": "EcoFlow IoT",
+            "pl": "EcoFlow IoT",
+            "uk": "EcoFlow IoT",
+            "zh-cn": "EcoFlow物联网"
+        },
+        "desc": {
+            "en": "Control EcoFlow devices via the official web api",
+            "de": "Steuern Sie EcoFlow-Geräte über die offizielle Web-API",
+            "ru": "Управляйте устройствами EcoFlow через официальный веб-API.",
+            "pt": "Controle dispositivos EcoFlow através da API web oficial",
+            "nl": "Bedien EcoFlow-apparaten via de officiële web-api",
+            "fr": "Contrôlez les appareils EcoFlow via l'API Web officielle",
+            "it": "Controlla i dispositivi EcoFlow tramite l'API web ufficiale",
+            "es": "Controle los dispositivos EcoFlow a través de la API web oficial",
+            "pl": "Kontroluj urządzenia EcoFlow za pośrednictwem oficjalnego internetowego interfejsu API",
+            "uk": "Керуйте пристроями EcoFlow через офіційний веб-інтерфейс",
+            "zh-cn": "通过官方网络 API 控制 EcoFlow 设备"
+        },
+        "authors": [
+            "Matthias Kleine <info@haus-automatisierung.com>"
+        ],
+        "keywords": [
+            "ecoflow",
+            "battery",
+            "iot"
+        ],
+        "licenseInformation": {
+            "type": "free",
+            "license": "MIT"
+        },
+        "platform": "Javascript/Node.js",
+        "icon": "ecoflow-iot.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/klein0r/ioBroker.ecoflow-iot/main/admin/ecoflow-iot.png",
+        "readme": "https://github.com/klein0r/ioBroker.ecoflow-iot/blob/main/README.md",
+        "loglevel": "info",
+        "tier": 3,
+        "mode": "daemon",
+        "type": "household",
+        "compact": true,
+        "connectionType": "cloud",
+        "dataSource": "push",
+        "adminUI": {
+            "config": "json"
+        },
+        "dependencies": [
+            {
+                "js-controller": ">=6.0.11"
+            }
+        ],
+        "globalDependencies": [
+            {
+                "admin": "7.0.23"
+            }
+        ]
+    },
+    "native": {
+        "option1": true,
+        "option2": "42"
+    },
+    "objects": [],
+    "instanceObjects": [
+        {
+            "_id": "info",
+            "type": "channel",
+            "common": {
+                "name": "Information"
+            },
+            "native": {}
+        },
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "Device or service connected",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {}
+        }
+    ]
+}
