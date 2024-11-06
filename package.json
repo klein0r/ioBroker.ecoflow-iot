@@ -1,6 +1,6 @@
 {
   "name": "iobroker.ecoflow-iot",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Control EcoFlow devices via the official web api",
   "author": {
     "name": "Matthias Kleine",
