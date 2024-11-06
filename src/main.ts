@@ -111,7 +111,7 @@ class EcoflowIot extends utils.Adapter {
 
     private onStateChange(id: string, state: ioBroker.State | null | undefined): void {
         if (id && state && !state.ack) {
-            const idNoNamespace = this.removeNamespace(id);
+            // const idNoNamespace = this.removeNamespace(id);
 
             // The state was changed
             this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
@@ -128,7 +128,7 @@ class EcoflowIot extends utils.Adapter {
             await this.setApiConnected(false);
 
             callback();
-        } catch (e) {
+        } catch {
             callback();
         }
     }

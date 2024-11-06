@@ -57,8 +57,8 @@ export namespace EcoflowApi {
             return res;
         }
 
-        private async apiRequestAsync(method: 'get' | 'post' | 'put', url: string, data?: object) {
-            const sha256 = (str: string, key: string) => crypto.createHmac('sha256', key).update(str).digest('hex');
+        private async apiRequestAsync(method: 'get' | 'post' | 'put', url: string, data?: object): Promise<object | undefined> {
+            const sha256 = (str: string, key: string): string => crypto.createHmac('sha256', key).update(str).digest('hex');
 
             const nonce = String(100000 + Math.floor(Math.random() * 100000));
             const timestamp = String(Date.now());
@@ -70,7 +70,7 @@ export namespace EcoflowApi {
                 const flatDataKeys = Object.keys(flatData);
                 flatDataKeys.sort();
 
-                dataStr = flatDataKeys.map(k => `${k}=${flatData[k]}`).join('&') + '&';
+                dataStr = flatDataKeys.map((k) => `${k}=${flatData[k]}`).join('&') + '&';
             }
 
             const uri = `${dataStr}accessKey=${this.accessKey}&nonce=${nonce}&timestamp=${timestamp}`;
