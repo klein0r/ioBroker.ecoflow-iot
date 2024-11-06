@@ -2,47 +2,7 @@
   "common": {
     "name": "ecoflow-iot",
     "version": "0.0.3",
-    "news": {
-      "0.0.3": {
-        "en": "Node 20.x is required",
-        "de": "Node 20.x ist erforderlich",
-        "ru": "Нод 20.x требуется",
-        "pt": "Node 20.x é necessário",
-        "nl": "Node 20.x is vereist",
-        "fr": "Node 20.x est requis",
-        "it": "Nodo 20.x è richiesto",
-        "es": "Nodo 20.x es necesario",
-        "pl": "Wymagany węzeł 20.x",
-        "uk": "Node 20.x необхідний",
-        "zh-cn": "需要20x节点"
-      },
-      "0.0.2": {
-        "en": "initial release",
-        "de": "erstausstrahlung",
-        "ru": "первоначальный выпуск",
-        "pt": "lançamento inicial",
-        "nl": "eerste release",
-        "fr": "libération initiale",
-        "it": "rilascio iniziale",
-        "es": "liberación inicial",
-        "pl": "początkowe zwolnienie",
-        "uk": "початковий реліз",
-        "zh-cn": "初步释放"
-      },
-      "0.0.1": {
-        "en": "initial release",
-        "de": "Erstveröffentlichung",
-        "ru": "Начальная версия",
-        "pt": "lançamento inicial",
-        "nl": "Eerste uitgave",
-        "fr": "Première version",
-        "it": "Versione iniziale",
-        "es": "Versión inicial",
-        "pl": "Pierwsze wydanie",
-        "uk": "Початкова версія",
-        "zh-cn": "首次出版"
-      }
-    },
+    "news": {},
     "titleLang": {
       "en": "EcoFlow IoT",
       "de": "EcoFlow IoT",

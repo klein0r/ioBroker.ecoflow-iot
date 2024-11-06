@@ -37,11 +37,7 @@ Control EcoFlow devices via the official web api
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### 0.0.3 (2024-11-06)
-
-* (@klein0r) Node 20.x is required
-
-### 0.0.2 (2024-11-06)
+### **WORK IN PROGRESS**
 
 * (@klein0r) initial release
 
