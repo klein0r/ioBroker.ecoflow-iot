@@ -2,6 +2,14 @@ import axios, { AxiosInstance } from 'axios';
 import crypto from 'node:crypto';
 
 export namespace EcoflowApi {
+    export type EcoFlowResponse = {
+        code: string;
+        message: string; // "Success"
+        data: any;
+        eagleEyeTraceId: string;
+        tid: string;
+    };
+
     export type EcoFlowDevice = {
         sn: string;
         online: number;
@@ -57,7 +65,7 @@ export namespace EcoflowApi {
             return res;
         }
 
-        private async apiRequestAsync(method: 'get' | 'post' | 'put', url: string, data?: object): Promise<object | undefined> {
+        private async apiRequestAsync(method: 'get' | 'post' | 'put', url: string, data?: object): Promise<EcoFlowResponse> {
             const sha256 = (str: string, key: string): string => crypto.createHmac('sha256', key).update(str).digest('hex');
 
             const nonce = String(100000 + Math.floor(Math.random() * 100000));
@@ -93,9 +101,9 @@ export namespace EcoflowApi {
 
             if (apiResponse.status === 200 && apiResponse.data.code == 0) {
                 return apiResponse.data;
-            } else if (apiResponse.data.code) {
-                throw new Error(`${apiResponse.data.code}: ${apiResponse.data.message}`);
             }
+
+            throw new Error(`${apiResponse.data.code}: ${apiResponse.data.message}`);
         }
 
         public async getDeviceList(): Promise<Array<EcoFlowDevice>> {
