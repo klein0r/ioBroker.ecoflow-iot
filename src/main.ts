@@ -2,10 +2,11 @@
  * Created with @iobroker/create-adapter v2.6.5
  */
 import * as utils from '@iobroker/adapter-core';
-import { AxiosResponse } from 'axios';
+import { EcoflowApi } from './lib/ecoflow-api';
 
 class EcoflowIot extends utils.Adapter {
     private apiConnected: boolean;
+    private ecoFlowApiClient: EcoflowApi.Client | null;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -14,6 +15,7 @@ class EcoflowIot extends utils.Adapter {
         });
 
         this.apiConnected = false;
+        this.ecoFlowApiClient = null;
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -22,6 +24,13 @@ class EcoflowIot extends utils.Adapter {
 
     private async onReady(): Promise<void> {
         this.setApiConnected(false);
+
+        this.ecoFlowApiClient = new EcoflowApi.Client(this.config.accessKey, this.config.secretKey);
+
+        const deviceList = await this.ecoFlowApiClient.getDeviceList();
+        for (const device of deviceList) {
+            this.log.debug(device.sn);
+        }
 
         await this.subscribeStatesAsync('*');
     }

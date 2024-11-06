@@ -1,142 +1,142 @@
 {
-    "common": {
-        "name": "ecoflow-iot",
-        "version": "0.0.1",
-        "news": {
-            "0.0.1": {
-                "en": "initial release",
-                "de": "Erstveröffentlichung",
-                "ru": "Начальная версия",
-                "pt": "lançamento inicial",
-                "nl": "Eerste uitgave",
-                "fr": "Première version",
-                "it": "Versione iniziale",
-                "es": "Versión inicial",
-                "pl": "Pierwsze wydanie",
-                "uk": "Початкова версія",
-                "zh-cn": "首次出版"
-            }
-        },
-        "titleLang": {
-            "en": "EcoFlow IoT",
-            "de": "EcoFlow IoT",
-            "ru": "ЭкоФлоу Интернет вещей",
-            "pt": "EcoFlow IoT",
-            "nl": "EcoFlow IoT",
-            "fr": "EcoFlow IoT",
-            "it": "EcoFlowIoT",
-            "es": "EcoFlow IoT",
-            "pl": "EcoFlow IoT",
-            "uk": "EcoFlow IoT",
-            "zh-cn": "EcoFlow物联网"
-        },
-        "desc": {
-            "en": "Control EcoFlow devices via the official web api",
-            "de": "Steuern Sie EcoFlow-Geräte über die offizielle Web-API",
-            "ru": "Управляйте устройствами EcoFlow через официальный веб-API.",
-            "pt": "Controle dispositivos EcoFlow através da API web oficial",
-            "nl": "Bedien EcoFlow-apparaten via de officiële web-api",
-            "fr": "Contrôlez les appareils EcoFlow via l'API Web officielle",
-            "it": "Controlla i dispositivi EcoFlow tramite l'API web ufficiale",
-            "es": "Controle los dispositivos EcoFlow a través de la API web oficial",
-            "pl": "Kontroluj urządzenia EcoFlow za pośrednictwem oficjalnego internetowego interfejsu API",
-            "uk": "Керуйте пристроями EcoFlow через офіційний веб-інтерфейс",
-            "zh-cn": "通过官方网络 API 控制 EcoFlow 设备"
-        },
-        "authors": [
-            "Matthias Kleine <info@haus-automatisierung.com>"
-        ],
-        "keywords": [
-            "ecoflow",
-            "battery",
-            "iot"
-        ],
-        "licenseInformation": {
-            "type": "free",
-            "license": "MIT"
-        },
-        "platform": "Javascript/Node.js",
-        "icon": "ecoflow-iot.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/klein0r/ioBroker.ecoflow-iot/main/admin/ecoflow-iot.png",
-        "readme": "https://github.com/klein0r/ioBroker.ecoflow-iot/blob/main/README.md",
-        "loglevel": "info",
-        "tier": 3,
-        "mode": "daemon",
-        "type": "household",
-        "compact": true,
-        "connectionType": "cloud",
-        "dataSource": "push",
-        "adminUI": {
-            "config": "json"
-        },
-        "dependencies": [
-            {
-                "js-controller": ">=5.0.19"
-            }
-        ],
-        "globalDependencies": [
-            {
-                "admin": ">=6.6.0"
-            }
-        ]
+  "common": {
+    "name": "ecoflow-iot",
+    "version": "0.0.1",
+    "news": {
+      "0.0.1": {
+        "en": "initial release",
+        "de": "Erstveröffentlichung",
+        "ru": "Начальная версия",
+        "pt": "lançamento inicial",
+        "nl": "Eerste uitgave",
+        "fr": "Première version",
+        "it": "Versione iniziale",
+        "es": "Versión inicial",
+        "pl": "Pierwsze wydanie",
+        "uk": "Початкова версія",
+        "zh-cn": "首次出版"
+      }
     },
-    "protectedNative": [
-        "accessKey",
-        "secretKey"
-    ],
-    "encryptedNative": [
-        "accessKey",
-        "secretKey"
-    ],
-    "native": {
-        "accessKey": "",
-        "secretKey": ""
+    "titleLang": {
+      "en": "EcoFlow IoT",
+      "de": "EcoFlow IoT",
+      "ru": "ЭкоФлоу Интернет вещей",
+      "pt": "EcoFlow IoT",
+      "nl": "EcoFlow IoT",
+      "fr": "EcoFlow IoT",
+      "it": "EcoFlowIoT",
+      "es": "EcoFlow IoT",
+      "pl": "EcoFlow IoT",
+      "uk": "EcoFlow IoT",
+      "zh-cn": "EcoFlow物联网"
     },
-    "objects": [],
-    "instanceObjects": [
-        {
-            "_id": "info",
-            "type": "channel",
-            "common": {
-                "en": "Information",
-                "de": "Information",
-                "ru": "Информация",
-                "pt": "Em formação",
-                "nl": "Informatie",
-                "fr": "Informations",
-                "it": "Informazione",
-                "es": "Información",
-                "pl": "Informacja",
-                "uk": "Інформація",
-                "zh-cn": "信息"
-            },
-            "native": {}
-        },
-        {
-            "_id": "info.connection",
-            "type": "state",
-            "common": {
-                "name": {
-                    "en": "Connected to EcoFlow IoT API",
-                    "de": "Mit EcoFlow IoT API verbunden",
-                    "ru": "Подключен к EcoFlow IoT API",
-                    "pt": "Conectado à API EcoFlow IoT",
-                    "nl": "Verbonden met EcoFlow IoT API",
-                    "fr": "Connecté à l'API IoT EcoFlow",
-                    "it": "Collegato a EcoFlow IoT API",
-                    "es": "Conectado a EcoFlow IoT API",
-                    "pl": "Połączony z API EcoFlow IoT",
-                    "uk": "Підключення до API EcoFlow IoT",
-                    "zh-cn": "已连接到 EcoFlow IoT API"
-                },
-                "type": "boolean",
-                "role": "indicator.connected",
-                "read": true,
-                "write": false,
-                "def": false
-            },
-            "native": {}
-        }
+    "desc": {
+      "en": "Control EcoFlow devices via the official web api",
+      "de": "Steuern Sie EcoFlow-Geräte über die offizielle Web-API",
+      "ru": "Управляйте устройствами EcoFlow через официальный веб-API.",
+      "pt": "Controle dispositivos EcoFlow através da API web oficial",
+      "nl": "Bedien EcoFlow-apparaten via de officiële web-api",
+      "fr": "Contrôlez les appareils EcoFlow via l'API Web officielle",
+      "it": "Controlla i dispositivi EcoFlow tramite l'API web ufficiale",
+      "es": "Controle los dispositivos EcoFlow a través de la API web oficial",
+      "pl": "Kontroluj urządzenia EcoFlow za pośrednictwem oficjalnego internetowego interfejsu API",
+      "uk": "Керуйте пристроями EcoFlow через офіційний веб-інтерфейс",
+      "zh-cn": "通过官方网络 API 控制 EcoFlow 设备"
+    },
+    "authors": [
+      "Matthias Kleine <info@haus-automatisierung.com>"
+    ],
+    "keywords": [
+      "ecoflow",
+      "battery",
+      "iot"
+    ],
+    "licenseInformation": {
+      "type": "free",
+      "license": "MIT"
+    },
+    "platform": "Javascript/Node.js",
+    "icon": "ecoflow-iot.png",
+    "enabled": true,
+    "extIcon": "https://raw.githubusercontent.com/klein0r/ioBroker.ecoflow-iot/main/admin/ecoflow-iot.png",
+    "readme": "https://github.com/klein0r/ioBroker.ecoflow-iot/blob/main/README.md",
+    "loglevel": "info",
+    "tier": 3,
+    "mode": "daemon",
+    "type": "household",
+    "compact": true,
+    "connectionType": "cloud",
+    "dataSource": "push",
+    "adminUI": {
+      "config": "json"
+    },
+    "dependencies": [
+      {
+        "js-controller": ">=5.0.19"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=6.6.0"
+      }
     ]
+  },
+  "protectedNative": [
+    "accessKey",
+    "secretKey"
+  ],
+  "encryptedNative": [
+    "accessKey",
+    "secretKey"
+  ],
+  "native": {
+    "accessKey": "",
+    "secretKey": ""
+  },
+  "objects": [],
+  "instanceObjects": [
+    {
+      "_id": "info",
+      "type": "channel",
+      "common": {
+        "en": "Information",
+        "de": "Information",
+        "ru": "Информация",
+        "pt": "Em formação",
+        "nl": "Informatie",
+        "fr": "Informations",
+        "it": "Informazione",
+        "es": "Información",
+        "pl": "Informacja",
+        "uk": "Інформація",
+        "zh-cn": "信息"
+      },
+      "native": {}
+    },
+    {
+      "_id": "info.connection",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Connected to EcoFlow IoT API",
+          "de": "Mit EcoFlow IoT API verbunden",
+          "ru": "Подключен к EcoFlow IoT API",
+          "pt": "Conectado à API EcoFlow IoT",
+          "nl": "Verbonden met EcoFlow IoT API",
+          "fr": "Connecté à l'API IoT EcoFlow",
+          "it": "Collegato a EcoFlow IoT API",
+          "es": "Conectado a EcoFlow IoT API",
+          "pl": "Połączony z API EcoFlow IoT",
+          "uk": "Підключення до API EcoFlow IoT",
+          "zh-cn": "已连接到 EcoFlow IoT API"
+        },
+        "type": "boolean",
+        "role": "indicator.connected",
+        "read": true,
+        "write": false,
+        "def": false
+      },
+      "native": {}
+    }
+  ]
 }
