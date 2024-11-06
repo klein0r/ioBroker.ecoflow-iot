@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import crypto from 'node:crypto';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 export namespace EcoflowApi {
 
@@ -7,15 +7,25 @@ export namespace EcoflowApi {
         sn: string;
         online: number;
         productName: string;
-    };
+    }
+
+    export type EcoFlowCertification = {
+        certificateAccount: string;
+        certificatePassword: string;
+        url: string;
+        port: string;
+        protocol: string;
+    }
 
     export class Client {
+        private logger: ioBroker.Log;
+        private axiosInstance: AxiosInstance | undefined = undefined;
         private accessKey: string;
         private secretKey: string;
 
-        private axiosInstance: AxiosInstance | undefined = undefined;
+        public constructor(logger: ioBroker.Log, accessKey: string, secretKey: string) {
+            this.logger = logger;
 
-        public constructor(accessKey: string, secretKey: string) {
             this.accessKey = accessKey;
             this.secretKey = secretKey;
 
@@ -82,7 +92,7 @@ export namespace EcoflowApi {
                 }
             );
 
-            // console.info(`Received ${apiResponse.status} from ${method} to ${url} (${uri}): ${JSON.stringify(apiResponse.data)}`);
+            this.logger.debug(`Received ${apiResponse.status} from ${method} to ${url} (${uri}): ${JSON.stringify(apiResponse.data)}`);
 
             if (apiResponse.status === 200 && apiResponse.data.code == 0) {
                 return apiResponse.data;
@@ -95,6 +105,12 @@ export namespace EcoflowApi {
             const deviceListResponse = await this.apiRequestAsync('get', '/iot-open/sign/device/list');
 
             return deviceListResponse.data;
+        }
+
+        public async getCertificateAcquisition(): Promise<EcoFlowCertification> {
+            const certificationResponse = await this.apiRequestAsync('get', '/iot-open/sign/certification');
+
+            return certificationResponse.data;
         }
     }
 }

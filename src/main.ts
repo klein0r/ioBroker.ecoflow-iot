@@ -25,12 +25,14 @@ class EcoflowIot extends utils.Adapter {
     private async onReady(): Promise<void> {
         this.setApiConnected(false);
 
-        this.ecoFlowApiClient = new EcoflowApi.Client(this.config.accessKey, this.config.secretKey);
+        this.ecoFlowApiClient = new EcoflowApi.Client(this.log, this.config.accessKey, this.config.secretKey);
 
         const deviceList = await this.ecoFlowApiClient.getDeviceList();
         for (const device of deviceList) {
-            this.log.debug(device.sn);
+            this.log.debug(`[onReady] Found device ${device.sn}: ${device.productName} (online: ${device.online})`);
         }
+
+        //await this.ecoFlowApiClient.getCertificateAcquisition();
 
         await this.subscribeStatesAsync('*');
     }
