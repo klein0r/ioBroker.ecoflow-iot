@@ -22,92 +22,109 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
+var import_ecoflow_api = require("./lib/ecoflow-api");
+var import_ecoflow_states = require("./lib/ecoflow-states");
 class EcoflowIot extends utils.Adapter {
+  apiConnected;
+  ecoFlowApiClient;
   constructor(options = {}) {
     super({
       ...options,
       name: "ecoflow-iot"
     });
+    this.apiConnected = false;
+    this.ecoFlowApiClient = null;
     this.on("ready", this.onReady.bind(this));
     this.on("stateChange", this.onStateChange.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
-  /**
-   * Is called when databases are connected and adapter received configuration.
-   */
   async onReady() {
-    this.setState("info.connection", false, true);
-    this.log.info("config option1: " + this.config.option1);
-    this.log.info("config option2: " + this.config.option2);
-    await this.setObjectNotExistsAsync("testVariable", {
-      type: "state",
-      common: {
-        name: "testVariable",
-        type: "boolean",
-        role: "indicator",
-        read: true,
-        write: true
-      },
-      native: {}
-    });
-    this.subscribeStates("testVariable");
-    await this.setStateAsync("testVariable", true);
-    await this.setStateAsync("testVariable", { val: true, ack: true });
-    await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-    let result = await this.checkPasswordAsync("admin", "iobroker");
-    this.log.info("check user admin pw iobroker: " + result);
-    result = await this.checkGroupAsync("admin", "admin");
-    this.log.info("check group user admin group admin: " + result);
+    this.setApiConnected(false);
+    this.ecoFlowApiClient = new import_ecoflow_api.EcoflowApi.Client(this.log, this.config.accessKey, this.config.secretKey);
+    const deviceList = await this.ecoFlowApiClient.getDeviceList();
+    for (const device of deviceList) {
+      this.log.debug(`[onReady] Found device ${device.sn}: ${device.productName} (online: ${device.online})`);
+      const deviceQuota = await this.ecoFlowApiClient.getDeviceQuota(device.sn);
+      const moduleTypes = {
+        PD: { moduleType: 1, prefix: "pd" },
+        BMS: { moduleType: 2, prefix: "bms_emsStatus" },
+        INV: { moduleType: 3, prefix: "inv" },
+        BMS_SLAVE: { moduleType: 4, prefix: "bms_bmsStatus" },
+        MPPT: { moduleType: 5, prefix: "mppt" }
+      };
+      await this.extendObject(`devices.${device.sn}`, {
+        type: "device",
+        common: {
+          name: device.productName,
+          desc: device.sn
+        },
+        native: {
+          sn: device.sn
+        }
+      });
+      for (const [type, config] of Object.entries(moduleTypes)) {
+        await this.extendObject(`devices.${device.sn}.${type}`, {
+          type: "channel",
+          common: {
+            name: `${type} (${config.moduleType})`
+          },
+          native: {}
+        });
+        if (config.prefix) {
+          const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
+          for (const quota of moduleTypeQuota) {
+            const quotaId = quota.replace(`${config.prefix}.`, "");
+            const efState = Object.hasOwn(import_ecoflow_states.knownStates, quota) ? import_ecoflow_states.knownStates[quota].common : {};
+            await this.extendObject(`devices.${device.sn}.${type}.${quotaId}`, {
+              type: "state",
+              common: {
+                name: quota,
+                role: "value",
+                type: "mixed",
+                read: true,
+                write: false,
+                ...efState
+              },
+              native: {
+                quota,
+                moduleType: config.moduleType
+              }
+            });
+            await this.setState(`devices.${device.sn}.${type}.${quotaId}`, { val: deviceQuota[quota], ack: true });
+          }
+        }
+      }
+    }
+    await this.subscribeStatesAsync("*");
   }
-  /**
-   * Is called when adapter shuts down - callback has to be called under any circumstances!
-   */
-  onUnload(callback) {
-    try {
-      callback();
-    } catch (e) {
-      callback();
+  async setApiConnected(connection) {
+    if (connection !== this.apiConnected) {
+      await this.setStateChangedAsync("info.connection", { val: connection, ack: true });
+      this.apiConnected = connection;
+      if (connection) {
+        this.log.debug("API is online");
+      } else {
+        this.log.debug("API is offline");
+      }
     }
   }
-  // If you need to react to object changes, uncomment the following block and the corresponding line in the constructor.
-  // You also need to subscribe to the objects with `this.subscribeObjects`, similar to `this.subscribeStates`.
-  // /**
-  //  * Is called if a subscribed object changes
-  //  */
-  // private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
-  //     if (obj) {
-  //         // The object was changed
-  //         this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-  //     } else {
-  //         // The object was deleted
-  //         this.log.info(`object ${id} deleted`);
-  //     }
-  // }
-  /**
-   * Is called if a subscribed state changes
-   */
   onStateChange(id, state) {
-    if (state) {
+    if (id && state && !state.ack) {
       this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
-    } else {
-      this.log.info(`state ${id} deleted`);
     }
   }
-  // If you need to accept messages in your adapter, uncomment the following block and the corresponding line in the constructor.
-  // /**
-  //  * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-  //  * Using this method requires "common.messagebox" property to be set to true in io-package.json
-  //  */
-  // private onMessage(obj: ioBroker.Message): void {
-  //     if (typeof obj === 'object' && obj.message) {
-  //         if (obj.command === 'send') {
-  //             // e.g. send email or pushover or whatever
-  //             this.log.info('send command');
-  //             // Send response in callback if required
-  //             if (obj.callback) this.sendTo(obj.from, obj.command, 'Message received', obj.callback);
-  //         }
-  //     }
-  // }
+  removeNamespace(id) {
+    const re = new RegExp(this.namespace + "*\\.", "g");
+    return id.replace(re, "");
+  }
+  async onUnload(callback) {
+    try {
+      await this.setApiConnected(false);
+      callback();
+    } catch {
+      callback();
+    }
+  }
 }
 if (require.main !== module) {
   module.exports = (options) => new EcoflowIot(options);
