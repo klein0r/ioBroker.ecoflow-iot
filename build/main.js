@@ -40,6 +40,14 @@ class EcoflowIot extends utils.Adapter {
   }
   async onReady() {
     this.setApiConnected(false);
+    if (!this.config.accessKey || !this.config.secretKey) {
+      if (typeof this.terminate === "function") {
+        this.terminate(11);
+      } else {
+        process.exit(11);
+      }
+      return;
+    }
     this.ecoFlowApiClient = new import_ecoflow_api.EcoflowApi.Client(this.log, this.config.accessKey, this.config.secretKey);
     const deviceList = await this.ecoFlowApiClient.getDeviceList();
     for (const device of deviceList) {
