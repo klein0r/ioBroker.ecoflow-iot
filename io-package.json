@@ -137,6 +137,24 @@
         "def": false
       },
       "native": {}
+    },
+    {
+      "_id": "devices",
+      "type": "folder",
+      "common": {
+        "en": "Devices",
+        "de": "Geräte",
+        "ru": "Устройства",
+        "pt": "Dispositivos",
+        "nl": "Apparaten",
+        "fr": "Dispositifs",
+        "it": "Apparecchi",
+        "es": "Dispositivos",
+        "pl": "Urządzenia",
+        "uk": "Пристрої",
+        "zh-cn": "设备"
+      },
+      "native": {}
     }
   ]
 }

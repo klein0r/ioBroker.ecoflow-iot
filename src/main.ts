@@ -3,6 +3,7 @@
  */
 import * as utils from '@iobroker/adapter-core';
 import { EcoflowApi } from './lib/ecoflow-api';
+import { knownStates as efKnownStates } from './lib/ecoflow-states';
 
 class EcoflowIot extends utils.Adapter {
     private apiConnected: boolean;
@@ -30,6 +31,63 @@ class EcoflowIot extends utils.Adapter {
         const deviceList = await this.ecoFlowApiClient.getDeviceList();
         for (const device of deviceList) {
             this.log.debug(`[onReady] Found device ${device.sn}: ${device.productName} (online: ${device.online})`);
+
+            const deviceQuota = await this.ecoFlowApiClient.getDeviceQuota(device.sn);
+
+            const moduleTypes = {
+                PD: { moduleType: 1, prefix: 'pd' },
+                BMS: { moduleType: 2, prefix: 'bms_emsStatus' },
+                INV: { moduleType: 3, prefix: 'inv' },
+                BMS_SLAVE: { moduleType: 4, prefix: 'bms_bmsStatus' },
+                MPPT: { moduleType: 5, prefix: 'mppt' },
+            };
+
+            await this.extendObject(`devices.${device.sn}`, {
+                type: 'device',
+                common: {
+                    name: device.productName,
+                    desc: device.sn,
+                },
+                native: {
+                    sn: device.sn,
+                },
+            });
+
+            for (const [type, config] of Object.entries(moduleTypes)) {
+                await this.extendObject(`devices.${device.sn}.${type}`, {
+                    type: 'channel',
+                    common: {
+                        name: `${type} (${config.moduleType})`,
+                    },
+                    native: {},
+                });
+
+                if (config.prefix) {
+                    const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
+
+                    for (const quota of moduleTypeQuota) {
+                        const quotaId = quota.replace(`${config.prefix}.`, '');
+                        const efState = Object.hasOwn(efKnownStates, quota) ? efKnownStates[quota].common : {};
+
+                        await this.extendObject(`devices.${device.sn}.${type}.${quotaId}`, {
+                            type: 'state',
+                            common: {
+                                name: quota,
+                                role: 'value',
+                                type: 'mixed',
+                                read: true,
+                                write: false,
+                                ...efState,
+                            },
+                            native: {
+                                quota,
+                                moduleType: config.moduleType,
+                            },
+                        });
+                        await this.setState(`devices.${device.sn}.${type}.${quotaId}`, { val: deviceQuota[quota], ack: true });
+                    }
+                }
+            }
         }
 
         //await this.ecoFlowApiClient.getCertificateAcquisition();

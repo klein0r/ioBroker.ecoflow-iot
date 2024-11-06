@@ -1,13 +1,12 @@
+import axios, { AxiosInstance } from 'axios';
 import crypto from 'node:crypto';
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 export namespace EcoflowApi {
-
     export type EcoFlowDevice = {
         sn: string;
         online: number;
         productName: string;
-    }
+    };
 
     export type EcoFlowCertification = {
         certificateAccount: string;
@@ -15,7 +14,7 @@ export namespace EcoflowApi {
         url: string;
         port: string;
         protocol: string;
-    }
+    };
 
     export class Client {
         private logger: ioBroker.Log;
@@ -42,12 +41,12 @@ export namespace EcoflowApi {
         private flattenKeys(obj: Record<string, any>, prefix?: string): Record<string, any> {
             const getPrefix = (k: string): string => {
                 if (!prefix) return k;
-                return (Array.isArray(obj)) ? `${prefix}[${k}]` : `${prefix}.${k}`;
+                return Array.isArray(obj) ? `${prefix}[${k}]` : `${prefix}.${k}`;
             };
 
             let res: Record<string, any> = {};
 
-            Object.keys(obj).forEach(k => {
+            Object.keys(obj).forEach((k) => {
                 if (typeof obj[k] === 'object') {
                     res = { ...res, ...this.flattenKeys(obj[k], getPrefix(k)) };
                 } else {
@@ -58,7 +57,7 @@ export namespace EcoflowApi {
             return res;
         }
 
-        private async apiRequestAsync(method: 'get'|'post'|'put', url: string, data?: Object) {
+        private async apiRequestAsync(method: 'get' | 'post' | 'put', url: string, data?: object) {
             const sha256 = (str: string, key: string) => crypto.createHmac('sha256', key).update(str).digest('hex');
 
             const nonce = String(100000 + Math.floor(Math.random() * 100000));
@@ -77,20 +76,18 @@ export namespace EcoflowApi {
             const uri = `${dataStr}accessKey=${this.accessKey}&nonce=${nonce}&timestamp=${timestamp}`;
             const sign = sha256(uri, this.secretKey);
 
-            const apiResponse = await this.axiosInstance!.request(
-                {
-                    method,
-                    url,
-                    data,
-                    headers: {
-                        'Content-Type': 'application/json;charset=UTF-8',
-                        accessKey: this.accessKey,
-                        nonce,
-                        timestamp,
-                        sign,
-                    },
-                }
-            );
+            const apiResponse = await this.axiosInstance!.request({
+                method,
+                url,
+                data,
+                headers: {
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    accessKey: this.accessKey,
+                    nonce,
+                    timestamp,
+                    sign,
+                },
+            });
 
             this.logger.debug(`Received ${apiResponse.status} from ${method} to ${url} (${uri}): ${JSON.stringify(apiResponse.data)}`);
 
@@ -105,6 +102,12 @@ export namespace EcoflowApi {
             const deviceListResponse = await this.apiRequestAsync('get', '/iot-open/sign/device/list');
 
             return deviceListResponse.data;
+        }
+
+        public async getDeviceQuota(sn: string): Promise<Record<string, any>> {
+            const quotaResponse = await this.apiRequestAsync('get', `/iot-open/sign/device/quota/all?sn=${sn}`);
+
+            return quotaResponse.data;
         }
 
         public async getCertificateAcquisition(): Promise<EcoFlowCertification> {
