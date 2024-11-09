@@ -161,7 +161,7 @@
       "native": {}
     },
     {
-      "_id": "mqtt.certificateAccount",
+      "_id": "mqtt.user",
       "type": "state",
       "common": {
         "name": {
@@ -187,7 +187,7 @@
       "native": {}
     },
     {
-      "_id": "mqtt.certificatePassword",
+      "_id": "mqtt.password",
       "type": "state",
       "common": {
         "name": {
@@ -255,11 +255,11 @@
           "uk": "Портфоліо",
           "zh-cn": "端口"
         },
-        "type": "string",
-        "role": "text",
+        "type": "number",
+        "role": "value",
         "read": true,
         "write": false,
-        "def": "",
+        "def": 0,
         "expert": true
       },
       "native": {}
