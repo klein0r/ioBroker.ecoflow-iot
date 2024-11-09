@@ -8,6 +8,7 @@ import { knownStates as efKnownStates } from './lib/ecoflow-states';
 class EcoflowIot extends utils.Adapter {
     private apiConnected: boolean;
     private ecoFlowApiClient: EcoflowApi.Client | null;
+    private knownDevices: Record<string, Record<string, string>>;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -17,6 +18,7 @@ class EcoflowIot extends utils.Adapter {
 
         this.apiConnected = false;
         this.ecoFlowApiClient = null;
+        this.knownDevices = {};
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -64,6 +66,8 @@ class EcoflowIot extends utils.Adapter {
             });
 
             for (const [type, config] of Object.entries(moduleTypes)) {
+                this.knownDevices[device.sn] = {};
+
                 await this.extendObject(`devices.${device.sn}.${type}`, {
                     type: 'channel',
                     common: {
@@ -78,8 +82,11 @@ class EcoflowIot extends utils.Adapter {
                     for (const quota of moduleTypeQuota) {
                         const quotaId = quota.replace(`${config.prefix}.`, '');
                         const efState = Object.hasOwn(efKnownStates, quota) ? efKnownStates[quota].common : {};
+                        const objId = `devices.${device.sn}.${type}.${quotaId}`;
 
-                        await this.extendObject(`devices.${device.sn}.${type}.${quotaId}`, {
+                        this.knownDevices[device.sn][quota] = objId;
+
+                        await this.extendObject(objId, {
                             type: 'state',
                             common: {
                                 name: quota,

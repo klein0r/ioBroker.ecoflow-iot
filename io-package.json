@@ -99,17 +99,19 @@
       "_id": "info",
       "type": "channel",
       "common": {
-        "en": "Information",
-        "de": "Information",
-        "ru": "Информация",
-        "pt": "Em formação",
-        "nl": "Informatie",
-        "fr": "Informations",
-        "it": "Informazione",
-        "es": "Información",
-        "pl": "Informacja",
-        "uk": "Інформація",
-        "zh-cn": "信息"
+        "name": {
+          "en": "Information",
+          "de": "Information",
+          "ru": "Информация",
+          "pt": "Em formação",
+          "nl": "Informatie",
+          "fr": "Informations",
+          "it": "Informazione",
+          "es": "Información",
+          "pl": "Informacja",
+          "uk": "Інформація",
+          "zh-cn": "信息"
+        }
       },
       "native": {}
     },
@@ -135,6 +137,156 @@
         "read": true,
         "write": false,
         "def": false
+      },
+      "native": {}
+    },
+    {
+      "_id": "mqtt",
+      "type": "channel",
+      "common": {
+        "name": {
+          "en": "MQTT Connection",
+          "de": "MQTT-Verbindung",
+          "ru": "Подключение MQTT",
+          "pt": "Conexão MQTT",
+          "nl": "MQTT-verbinding",
+          "fr": "Connexion MQTT",
+          "it": "Connessione MQTT",
+          "es": "Conexión MQTT",
+          "pl": "Połączenie MQTT",
+          "uk": "MQTT Підключення",
+          "zh-cn": "MQTT 连接"
+        }
+      },
+      "native": {}
+    },
+    {
+      "_id": "mqtt.certificateAccount",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Certificate Account",
+          "de": "Zertifikatskonto",
+          "ru": "Счет сертификата",
+          "pt": "Conta de Certificado",
+          "nl": "Certificaataccount",
+          "fr": "Compte de certificat",
+          "it": "Account certificato",
+          "es": "Cuenta de certificado",
+          "pl": "Rachunek certyfikatów",
+          "uk": "Довідка",
+          "zh-cn": "证书账户"
+        },
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": "",
+        "expert": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "mqtt.certificatePassword",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Password",
+          "de": "Passwort",
+          "ru": "Пароль",
+          "pt": "Senha",
+          "nl": "Wachtwoord",
+          "fr": "Mot de passe",
+          "it": "Password",
+          "es": "Contraseña",
+          "pl": "Hasło",
+          "uk": "Логін",
+          "zh-cn": "密码"
+        },
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": "",
+        "expert": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "mqtt.url",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "URL",
+          "de": "URL",
+          "ru": "URL",
+          "pt": "URL",
+          "nl": "URL",
+          "fr": "URL",
+          "it": "URL",
+          "es": "URL",
+          "pl": "URL",
+          "uk": "КОНТАКТИ",
+          "zh-cn": "網址"
+        },
+        "type": "string",
+        "role": "text.url",
+        "read": true,
+        "write": false,
+        "def": "",
+        "expert": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "mqtt.port",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Port",
+          "de": "Port",
+          "ru": "Порт",
+          "pt": "Porto",
+          "nl": "Haven",
+          "fr": "Port",
+          "it": "Porto",
+          "es": "Puerto",
+          "pl": "Port",
+          "uk": "Портфоліо",
+          "zh-cn": "端口"
+        },
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": "",
+        "expert": true
+      },
+      "native": {}
+    },
+    {
+      "_id": "mqtt.protocol",
+      "type": "state",
+      "common": {
+        "name": {
+          "en": "Protocol",
+          "de": "Protokoll",
+          "ru": "Протокол",
+          "pt": "Protocolo",
+          "nl": "Protocol",
+          "fr": "Protocole",
+          "it": "Protocollo",
+          "es": "Protocolo",
+          "pl": "Protokół",
+          "uk": "Протоколи",
+          "zh-cn": "议定书"
+        },
+        "type": "string",
+        "role": "text",
+        "read": true,
+        "write": false,
+        "def": "",
+        "expert": true
       },
       "native": {}
     },
