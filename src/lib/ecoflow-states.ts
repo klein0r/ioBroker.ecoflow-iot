@@ -1,4 +1,127 @@
+// https://developer-eu.ecoflow.com/us/document/delta2
+
 export const knownStates: Record<string, ioBroker.PartialStateObject> = {
+    'mppt.cfgAcEnabled': {
+        common: {
+            desc: 'AC switch',
+            states: {
+                0: 'off',
+                1: 'on',
+            },
+            write: true,
+        },
+        native: {
+            operateType: 'acOutCfg',
+            operateParamName: 'enabled',
+        },
+    },
+    'mppt.cfgAcOutFreq': {
+        common: {
+            desc: 'Output frequency configured for the inverter',
+            unit: 'Hz',
+            // write: true,
+        },
+        native: {
+            operateType: 'acOutCfg',
+            operateParamName: 'out_freq',
+        },
+    },
+    'mppt.cfgAcOutVol': {
+        common: {
+            desc: 'Output voltage configured for the inverter',
+            unit: 'V',
+            // write: true,
+        },
+        native: {
+            operateType: 'acOutCfg',
+            operateParamName: 'out_voltage',
+        },
+    },
+    'mppt.cfgAcXboost': {
+        common: {
+            desc: 'X-Boost switch',
+            states: {
+                0: 'off',
+                1: 'on',
+            },
+            write: true,
+        },
+        native: {
+            operateType: 'acOutCfg',
+            operateParamName: 'xboost',
+        },
+    },
+    'mppt.cfgChgWatts': {
+        common: {
+            desc: 'AC maximum charging power',
+            unit: 'W',
+            write: true,
+        },
+        native: {
+            operateType: 'acChgCfg',
+            operateParamName: 'chgWatts',
+        },
+    },
+    'mppt.chgPauseFlag': {
+        common: {
+            desc: 'PV charging pause flag',
+            write: true,
+        },
+        native: {
+            operateType: 'acChgCfg',
+            operateParamName: 'chgPauseFlag',
+        },
+    },
+    'mppt.beepState': {
+        common: {
+            desc: 'Buzzer status',
+            states: {
+                0: 'Default',
+                1: 'Silent mode',
+            },
+            write: true,
+        },
+        native: {
+            operateType: 'quietMode',
+            operateParamName: 'enabled',
+        },
+    },
+    'mppt.carState': {
+        common: {
+            desc: 'Car charger switch status',
+            states: {
+                0: 'off',
+                1: 'on',
+            },
+            write: true,
+        },
+        native: {
+            operateType: 'mpptCar',
+            operateParamName: 'enabled',
+        },
+    },
+    'mppt.acStandbyMins': {
+        common: {
+            desc: 'Auto shutdown when there is no load',
+            unit: 'min.',
+            write: true,
+        },
+        native: {
+            operateType: 'standbyTime',
+            operateParamName: 'standbyMins',
+        },
+    },
+    'mppt.carStandbyMin': {
+        common: {
+            desc: 'Auto shutdown when there is no load',
+            unit: 'min.',
+            write: true,
+        },
+        native: {
+            operateType: 'carStandby',
+            operateParamName: 'standbyMins',
+        },
+    },
     'pd.wattsInSum': {
         common: {
             desc: 'Total input power',
@@ -112,56 +235,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
             },
         },
     },
-    'mppt.cfgAcEnabled': {
-        common: {
-            desc: 'AC switch',
-            states: {
-                0: 'off',
-                1: 'on',
-            },
-            write: true,
-        },
-        native: {
-            operateType: 'acChgCfg',
-            operateParamName: 'enabled',
-        },
-    },
-    'mppt.cfgAcOutFreq': {
-        common: {
-            desc: 'Output frequency configured for the inverter',
-            unit: 'Hz',
-            // write: true,
-        },
-        native: {
-            operateType: 'acChgCfg',
-            operateParamName: 'out_freq',
-        },
-    },
-    'mppt.cfgAcOutVol': {
-        common: {
-            desc: 'Output voltage configured for the inverter',
-            unit: 'V',
-            // write: true,
-        },
-        native: {
-            operateType: 'acChgCfg',
-            operateParamName: 'out_voltage',
-        },
-    },
-    'mppt.cfgAcXboost': {
-        common: {
-            desc: 'X-Boost switch',
-            states: {
-                0: 'off',
-                1: 'on',
-            },
-            write: true,
-        },
-        native: {
-            operateType: 'acChgCfg',
-            operateParamName: 'xboost',
-        },
-    },
     'inv.outTemp': {
         common: {
             desc: 'Temperature',
@@ -264,12 +337,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
         common: {
             desc: 'Inverter input frequency',
             unit: 'Hz',
-        },
-    },
-    'mppt.carStandbyMin': {
-        common: {
-            desc: 'Auto shutdown when there is no load',
-            unit: 'min.',
         },
     },
     'pd.soc': {
@@ -504,15 +571,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
         },
     },
     */
-    'mppt.carState': {
-        common: {
-            desc: 'Car charger switch status',
-            states: {
-                0: 'off',
-                1: 'on',
-            },
-        },
-    },
     'mppt.dischargeType': {
         common: {
             desc: 'Discharging type',
@@ -627,20 +685,9 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
             unit: '°C',
         },
     },
-    'mppt.chgPauseFlag': {
-        common: {
-            desc: 'PV charging pause flag',
-        },
-    },
     'bms_emsStatus.minOpenOilEb': {
         common: {
             desc: 'Enable SOC of Smart Generator',
-        },
-    },
-    'mppt.acStandbyMins': {
-        common: {
-            desc: 'Auto shutdown when there is no load',
-            unit: 'min.',
         },
     },
     'mppt.powStandbyMin': {
@@ -754,15 +801,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
             unit: 'W',
         },
     },
-    'mppt.beepState': {
-        common: {
-            desc: 'Buzzer status',
-            states: {
-                0: 'Default',
-                1: 'Silent mode',
-            },
-        },
-    },
     'pd.sysVer': {
         common: {
             desc: 'System version: 0x0102002F = V1.2.0.47',
@@ -789,12 +827,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
         common: {
             desc: 'Maximum MOS temperature',
             unit: '°C',
-        },
-    },
-    'mppt.cfgChgWatts': {
-        common: {
-            desc: 'AC maximum charging power',
-            unit: 'W',
         },
     },
     'pd.qcUsb1Watts': {

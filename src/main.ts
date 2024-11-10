@@ -287,42 +287,46 @@ class EcoflowIot extends utils.Adapter {
         if (id && state && !state.ack) {
             const idNoNamespace = this.removeNamespace(id);
 
-            const stateObj = await this.getObjectAsync(id);
-            const sn = stateObj?.native?.sn;
-            const operateType = stateObj?.native?.operateType;
-            const operateParamName = stateObj?.native?.operateParamName;
-            const moduleType = stateObj?.native.moduleType;
+            if (idNoNamespace.startsWith('devices.')) {
+                // Device operation
 
-            if (sn && operateType && moduleType) {
-                this.log.info(`${idNoNamespace} changed to ${state.val} - perform change of operateType ${operateType}, moduleType ${moduleType} for ${sn}`);
+                const stateObj = await this.getObjectAsync(id);
+                const sn = stateObj?.native?.sn;
+                const operateType = stateObj?.native?.operateType;
+                const operateParamName = stateObj?.native?.operateParamName;
+                const moduleType = stateObj?.native.moduleType;
 
-                const operateParams = {
-                    [operateParamName]: state.val,
-                };
+                if (sn && operateType && moduleType) {
+                    this.log.info(`${idNoNamespace} changed to ${state.val} - perform change of operateType ${operateType}, moduleType ${moduleType} for ${sn}`);
 
-                // Find more values for same group
-                const objList = await this.getObjectViewAsync('system', 'state', {
-                    startkey: `${this.namespace}.devices.${sn}.`,
-                    endkey: `${this.namespace}.devices.${sn}.\u9999`,
-                    include_docs: true,
-                });
+                    const operateParams = {
+                        [operateParamName]: state.val,
+                    };
 
-                for (const obj of objList.rows) {
-                    if (obj.id !== id) {
-                        const testModuleType = obj.value.native?.moduleType;
-                        const testOperateType = obj.value.native?.operateType;
-                        const testOperateParamName = obj.value.native?.operateParamName;
+                    // Find more values for same operateType
+                    const objList = await this.getObjectViewAsync('system', 'state', {
+                        startkey: `${this.namespace}.devices.${sn}.`,
+                        endkey: `${this.namespace}.devices.${sn}.\u9999`,
+                        include_docs: true,
+                    });
 
-                        if (testModuleType == moduleType && testOperateType == operateType && testOperateParamName) {
-                            const additionalState = await this.getForeignStateAsync(obj.id);
-                            if (additionalState) {
-                                operateParams[testOperateParamName] = additionalState.val;
+                    for (const obj of objList.rows) {
+                        if (obj.id !== id) {
+                            const testModuleType = obj.value.native?.moduleType;
+                            const testOperateType = obj.value.native?.operateType;
+                            const testOperateParamName = obj.value.native?.operateParamName;
+
+                            if (testModuleType == moduleType && testOperateType == operateType && testOperateParamName) {
+                                const additionalState = await this.getForeignStateAsync(obj.id);
+                                if (additionalState) {
+                                    operateParams[testOperateParamName] = additionalState.val;
+                                }
                             }
                         }
                     }
-                }
 
-                await this.publishChange(sn, moduleType, operateType, operateParams);
+                    await this.publishChange(sn, moduleType, operateType, operateParams);
+                }
             }
         }
     }
