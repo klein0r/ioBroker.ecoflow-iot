@@ -40,6 +40,7 @@ Control EcoFlow devices via the official web api
 ### **WORK IN PROGRESS**
 
 * (@klein0r) Added states for mqtt credentials
+* (@klein0r) All states are numbers
 
 ### 0.0.4 (2024-11-06)
 
