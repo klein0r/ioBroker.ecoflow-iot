@@ -8,6 +8,7 @@ import { knownStates as efKnownStates } from './lib/ecoflow-states';
 
 type QuotaDescription = {
     dataType: string;
+    valueType: string;
     objId: string;
 };
 
@@ -101,32 +102,36 @@ class EcoflowIot extends utils.Adapter {
                 const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
 
                 for (const quota of moduleTypeQuota) {
-                    const quotaId = quota.replace(`${config.prefix}.`, '');
-                    const efState = Object.hasOwn(efKnownStates, quota) ? efKnownStates[quota] : {};
-                    const objId = `${objIdPrefix}.${quotaId}`;
+                    const valueType = typeof deviceQuota[quota];
+                    if (['string', 'number'].includes(valueType)) {
+                        const quotaId = quota.replace(`${config.prefix}.`, '');
+                        const efState = Object.hasOwn(efKnownStates, quota) ? efKnownStates[quota] : {};
+                        const objId = `${objIdPrefix}.${quotaId}`;
 
-                    this.knownDevices[device.sn][config.moduleType][quotaId] = {
-                        objId,
-                        dataType: efState?.common?.type ?? 'mixed',
-                    };
+                        this.knownDevices[device.sn][config.moduleType][quotaId] = {
+                            objId,
+                            valueType,
+                            dataType: efState?.common?.type ?? 'string',
+                        };
 
-                    await this.extendObject(objId, {
-                        type: 'state',
-                        common: {
-                            name: quota,
-                            role: 'state',
-                            type: 'mixed',
-                            read: true,
-                            write: false,
-                            ...(efState?.common ?? {}),
-                        },
-                        native: {
-                            quota,
-                            moduleType: config.moduleType,
-                        },
-                    });
+                        await this.extendObject(objId, {
+                            type: 'state',
+                            common: {
+                                name: quota,
+                                role: 'state',
+                                type: 'string',
+                                read: true,
+                                write: false,
+                                ...(efState?.common ?? {}),
+                            },
+                            native: {
+                                quota,
+                                moduleType: config.moduleType,
+                            },
+                        });
 
-                    await this.setState(`devices.${device.sn}.${type}.${quotaId}`, { val: deviceQuota[quota], ack: true });
+                        await this.setState(`devices.${device.sn}.${type}.${quotaId}`, { val: deviceQuota[quota], ack: true });
+                    }
                 }
             }
         }
@@ -163,12 +168,15 @@ class EcoflowIot extends utils.Adapter {
                         for (const [param, val] of Object.entries(payloadObj.params)) {
                             const quotaDescription = quota?.[payloadObj.moduleType]?.[param];
                             if (quotaDescription) {
-                                this.log.debug(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
-                                this.setState(quotaDescription.objId, {
-                                    val: quotaDescription.dataType === 'number' ? val : String(val),
-                                    ack: true,
-                                    c: topic,
-                                });
+                                const valueType = typeof val;
+                                if (['string', 'number'].includes(valueType)) {
+                                    this.log.debug(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
+                                    this.setState(quotaDescription.objId, {
+                                        val: quotaDescription.dataType === 'number' ? Number(val) : String(val),
+                                        ack: true,
+                                        c: topic,
+                                    });
+                                }
                             }
                         }
                     } catch {}
@@ -186,7 +194,7 @@ class EcoflowIot extends utils.Adapter {
             await this.setState('mqtt.user', { val: certificate.certificateAccount, ack: true });
             await this.setState('mqtt.password', { val: certificate.certificatePassword, ack: true });
             await this.setState('mqtt.url', { val: certificate.url, ack: true });
-            await this.setState('mqtt.port', { val: certificate.port, ack: true });
+            await this.setState('mqtt.port', { val: Number(certificate.port), ack: true });
             await this.setState('mqtt.protocol', { val: certificate.protocol, ack: true });
         }
 
