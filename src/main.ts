@@ -24,6 +24,7 @@ type MqttCredentials = {
 };
 
 class EcoflowIot extends utils.Adapter {
+    private mqttPublishId: number;
     private apiConnected: boolean;
     private ecoFlowApiClient: EcoflowApi.Client | null;
     private knownDevices: Record<string /* sn */, DeviceDescription>;
@@ -35,6 +36,7 @@ class EcoflowIot extends utils.Adapter {
             name: 'ecoflow-iot',
         });
 
+        this.mqttPublishId = 1;
         this.apiConnected = false;
         this.ecoFlowApiClient = null;
         this.knownDevices = {};
@@ -56,6 +58,8 @@ class EcoflowIot extends utils.Adapter {
         this.setApiConnected(false);
 
         if (!this.config.accessKey || !this.config.secretKey) {
+            this.log.error(`Access key and/or secret key is empty. Please check instance configuration and restart.`);
+
             if (typeof this.terminate === 'function') {
                 this.terminate(11);
             } else {
@@ -133,8 +137,10 @@ class EcoflowIot extends utils.Adapter {
                                 ...(efState?.common ?? {}),
                             },
                             native: {
+                                sn: device.sn,
                                 quota,
                                 moduleType: config.moduleType,
+                                ...(efState?.native ?? {}),
                             },
                         });
 
@@ -154,7 +160,8 @@ class EcoflowIot extends utils.Adapter {
             await mqttClient.subscribeAsync(`/open/${mqttCredentials.user}/${sn}/quota`);
             this.log.debug(`MQTT Client subscribed to /open/${mqttCredentials.user}/${sn}/quota`);
 
-            // await mqttClient.subscribeAsync(`/open/${mqttCredentials.user}/${sn}/status`);
+            await mqttClient.subscribeAsync(`/open/${mqttCredentials.user}/${sn}/set_reply`);
+            this.log.debug(`MQTT Client subscribed to /open/${mqttCredentials.user}/${sn}/set_reply`);
         }
 
         mqttClient.on('message', (topic, message) => {
@@ -162,25 +169,34 @@ class EcoflowIot extends utils.Adapter {
 
             // Find matching device
             for (const [sn, quota] of Object.entries(this.knownDevices)) {
-                this.log.debug(`[MQTT client] Searching ${sn} in topic ${topic}`);
+                // this.log.debug(`[MQTT client] Searching ${sn} in topic ${topic}`);
                 if (topic.includes(sn)) {
                     try {
                         const payload = message.toString();
                         const payloadObj = JSON.parse(payload);
 
-                        for (const [param, val] of Object.entries(payloadObj.params)) {
-                            const quotaDescription = quota?.[payloadObj.moduleType]?.[param];
-                            if (quotaDescription) {
-                                const valueType = typeof val;
-                                if (valueType === 'number' && valueType === quotaDescription.valueType) {
-                                    this.log.debug(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
-                                    this.setState(quotaDescription.objId, {
-                                        val: Number(val),
-                                        ack: true,
-                                        c: topic,
-                                    });
+                        if (topic.endsWith('/quota')) {
+                            // Update state values
+
+                            for (const [param, val] of Object.entries(payloadObj.params)) {
+                                const quotaDescription = quota?.[payloadObj.moduleType]?.[param];
+                                if (quotaDescription) {
+                                    const valueType = typeof val;
+                                    if (valueType === 'number' && valueType === quotaDescription.valueType) {
+                                        this.log.silly(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
+
+                                        this.setState(quotaDescription.objId, {
+                                            val: Number(val),
+                                            ack: true,
+                                            c: topic,
+                                        });
+                                    }
                                 }
                             }
+                        } else if (topic.endsWith('/set_reply')) {
+                            // TODO
+
+                            this.log.info(`Received set reply: ${payload}`);
                         }
                     } catch {}
                 }
@@ -250,12 +266,64 @@ class EcoflowIot extends utils.Adapter {
         }
     }
 
-    private onStateChange(id: string, state: ioBroker.State | null | undefined): void {
-        if (id && state && !state.ack) {
-            // const idNoNamespace = this.removeNamespace(id);
+    private async publishChange(sn: string, moduleType: string, operateType: string, params: Record<string, any>): Promise<void> {
+        const mqttConnection = await this.getMqttConnection();
+        const mqttCredentials = mqttConnection.credentials;
 
-            // The state was changed
-            this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+        const payload = {
+            id: this.mqttPublishId++,
+            version: '1.0',
+            moduleType: parseInt(moduleType),
+            operateType,
+            params,
+        };
+
+        await mqttConnection.client.publishAsync(`/open/${mqttCredentials.user}/${sn}/set`, JSON.stringify(payload));
+
+        this.log.debug(`[publishChange] Sent to ${sn}: ${JSON.stringify(payload)}`);
+    }
+
+    private async onStateChange(id: string, state: ioBroker.State | null | undefined): Promise<void> {
+        if (id && state && !state.ack) {
+            const idNoNamespace = this.removeNamespace(id);
+
+            const stateObj = await this.getObjectAsync(id);
+            const sn = stateObj?.native?.sn;
+            const operateType = stateObj?.native?.operateType;
+            const operateParamName = stateObj?.native?.operateParamName;
+            const moduleType = stateObj?.native.moduleType;
+
+            if (sn && operateType && moduleType) {
+                this.log.info(`${idNoNamespace} changed to ${state.val} - perform change of operateType ${operateType}, moduleType ${moduleType} for ${sn}`);
+
+                const operateParams = {
+                    [operateParamName]: state.val,
+                };
+
+                // Find more values for same group
+                const objList = await this.getObjectViewAsync('system', 'state', {
+                    startkey: `${this.namespace}.devices.${sn}.`,
+                    endkey: `${this.namespace}.devices.${sn}.\u9999`,
+                    include_docs: true,
+                });
+
+                for (const obj of objList.rows) {
+                    if (obj.id !== id) {
+                        const testModuleType = obj.value.native?.moduleType;
+                        const testOperateType = obj.value.native?.operateType;
+                        const testOperateParamName = obj.value.native?.operateParamName;
+
+                        if (testModuleType == moduleType && testOperateType == operateType && testOperateParamName) {
+                            const additionalState = await this.getForeignStateAsync(obj.id);
+                            if (additionalState) {
+                                operateParams[testOperateParamName] = additionalState.val;
+                            }
+                        }
+                    }
+                }
+
+                await this.publishChange(sn, moduleType, operateType, operateParams);
+            }
         }
     }
 

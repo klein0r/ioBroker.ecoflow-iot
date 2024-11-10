@@ -119,6 +119,47 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
                 0: 'off',
                 1: 'on',
             },
+            write: true,
+        },
+        native: {
+            operateType: 'acChgCfg',
+            operateParamName: 'enabled',
+        },
+    },
+    'mppt.cfgAcOutFreq': {
+        common: {
+            desc: 'Output frequency configured for the inverter',
+            unit: 'Hz',
+            // write: true,
+        },
+        native: {
+            operateType: 'acChgCfg',
+            operateParamName: 'out_freq',
+        },
+    },
+    'mppt.cfgAcOutVol': {
+        common: {
+            desc: 'Output voltage configured for the inverter',
+            unit: 'V',
+            // write: true,
+        },
+        native: {
+            operateType: 'acChgCfg',
+            operateParamName: 'out_voltage',
+        },
+    },
+    'mppt.cfgAcXboost': {
+        common: {
+            desc: 'X-Boost switch',
+            states: {
+                0: 'off',
+                1: 'on',
+            },
+            write: true,
+        },
+        native: {
+            operateType: 'acChgCfg',
+            operateParamName: 'xboost',
         },
     },
     'inv.outTemp': {
@@ -169,12 +210,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
         common: {
             desc: 'Charging power',
             unit: 'W',
-        },
-    },
-    'mppt.cfgAcOutVol': {
-        common: {
-            desc: 'Output voltage configured for the inverter',
-            unit: 'V',
         },
     },
     'bms_emsStatus.chgState': {
@@ -254,12 +289,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
             desc: 'Fan level',
         },
     },
-    'mppt.cfgAcOutFreq': {
-        common: {
-            desc: 'Output frequency configured for the inverter',
-            unit: 'Hz',
-        },
-    },
     'mppt.carOutVol': {
         common: {
             desc: 'Car charger output voltage',
@@ -279,15 +308,6 @@ export const knownStates: Record<string, ioBroker.PartialStateObject> = {
         },
     },
     */
-    'mppt.cfgAcXboost': {
-        common: {
-            desc: 'X-Boost switch',
-            states: {
-                0: 'off',
-                1: 'on',
-            },
-        },
-    },
     'pd.dsgPowerDC': {
         common: {
             desc: 'Cumulative DC discharge capacity',
