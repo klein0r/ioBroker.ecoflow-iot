@@ -1,8 +1,9 @@
-export const knownStates: Record<string, { common: object }> = {
+export const knownStates: Record<string, ioBroker.PartialStateObject> = {
     'pd.wattsInSum': {
         common: {
             desc: 'Total input power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -10,6 +11,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Maximum charging SOC',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -17,6 +19,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Design capacity',
             type: 'number',
+            role: 'state',
             unit: 'mAh',
         },
     },
@@ -24,6 +27,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Full capacity',
             type: 'number',
+            role: 'state',
             unit: 'mAh',
         },
     },
@@ -31,6 +35,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -38,6 +43,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Battery level SOC',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -45,6 +51,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'BEEP mode',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'normal',
                 1: 'silent',
@@ -55,6 +62,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -62,6 +70,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Type-C 2 output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -69,6 +78,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Discharging power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -76,6 +86,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Voltage',
             type: 'number',
+            role: 'state',
             unit: 'V',
         },
     },
@@ -83,6 +94,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charging voltage',
             type: 'number',
+            role: 'state',
             unit: 'V',
         },
     },
@@ -90,6 +102,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Output frequency',
             type: 'number',
+            role: 'state',
             unit: 'Hz',
         },
     },
@@ -97,6 +110,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV input current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -104,6 +118,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV input voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -111,6 +126,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Fan status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'disabled',
                 1: 'level 1',
@@ -123,6 +139,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'X-Boost switch',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'on',
@@ -133,6 +150,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'AC switch',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'on',
@@ -143,6 +161,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -150,6 +169,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Common USB1 output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -157,6 +177,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'DC 12 V 30 A output current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -164,6 +185,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Inverter actual output voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -172,6 +194,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'RJ45 port: 0: NULL; 1: RC(BLE_CTL)',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -179,6 +202,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charging current',
             type: 'number',
+            role: 'state',
             unit: 'A',
         },
     },
@@ -187,6 +211,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Global error code',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -194,6 +219,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charging power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -201,6 +227,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Output voltage configured for the inverter',
             type: 'number',
+            role: 'state',
             unit: 'V',
         },
     },
@@ -208,12 +235,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charging status',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_bmsStatus.inputWatts': {
         common: {
             desc: 'Input power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -221,12 +250,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Battery pack enabling status',
             type: 'number',
+            role: 'state',
         },
     },
     'pd.typec2Temp': {
         common: {
             desc: 'Type-C 2 temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -234,6 +265,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'CAR use time',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -241,6 +273,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Type-C 1 output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -248,6 +281,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charging status on screen',
             type: 'number',
+            role: 'state',
             states: {
                 1: 'discharging',
                 2: 'charging',
@@ -258,12 +292,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV charging pause flag',
             type: 'number',
+            role: 'state',
         },
     },
     'inv.acInFreq': {
         common: {
             desc: 'Inverter input frequency',
             type: 'number',
+            role: 'state',
             unit: 'Hz',
         },
     },
@@ -271,6 +307,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Auto shutdown when there is no load',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -278,6 +315,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Display SOC',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -285,6 +323,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Inverter output current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -292,12 +331,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Fan level',
             type: 'number',
+            role: 'state',
         },
     },
     'mppt.cfgAcOutFreq': {
         common: {
             desc: 'Output frequency configured for the inverter',
             type: 'number',
+            role: 'state',
             unit: 'Hz',
         },
     },
@@ -305,6 +346,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Car charger output voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -312,6 +354,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'DC input voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -320,6 +363,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: '3+8 ports: 0: NULL; 1: CC; 2: PR; 3: SP (BC)',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -327,6 +371,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'X-Boost switch',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'on',
@@ -337,6 +382,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Cumulative DC discharge capacity',
             type: 'number',
+            role: 'state',
             unit: 'Wh',
         },
     },
@@ -344,6 +390,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'DC input current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -351,6 +398,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Type-C use time',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -358,6 +406,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Car charger output current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -365,6 +414,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Remaining capacity',
             type: 'number',
+            role: 'state',
             unit: 'mAh',
         },
     },
@@ -372,12 +422,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'LCD brightness level',
             type: 'number',
+            role: 'state',
         },
     },
     'inv.dcInTemp': {
         common: {
             desc: 'DC temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -385,18 +437,21 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Maximum available quantity',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_emsStatus.maxCloseOilEb': {
         common: {
             desc: 'Disable SOC of Smart Generator',
             type: 'number',
+            role: 'state',
         },
     },
     'mppt.dcdc12vVol': {
         common: {
             desc: 'DC 12 V 30 A output voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -404,6 +459,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Total output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -411,6 +467,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Auto shutdown when there is no load',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -418,6 +475,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Car charger output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -425,6 +483,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'SoC value displayed on LCD',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -432,6 +491,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'AC switch',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'on',
@@ -442,6 +502,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV output voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -449,6 +510,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Maximum voltage when two devices work in parallel',
             type: 'number',
+            role: 'state',
             unit: 'V',
         },
     },
@@ -456,6 +518,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Actual charging type',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'null',
                 1: 'Adapter (adapter/DC power)',
@@ -471,6 +534,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'BMS permanent fault',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -478,6 +542,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'AC fast/slow charging dip switch',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'unknown',
                 1: 'fast charging',
@@ -489,6 +554,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Configured charging type - valid when xt60_chg_type is 0',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'Auto',
                 1: 'MPPT',
@@ -500,6 +566,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Minimum voltage when two devices work in parallel',
             type: 'number',
+            role: 'state',
             unit: 'V',
         },
     },
@@ -507,6 +574,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Auto shutdown when there is no load',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -514,6 +582,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Discharging type',
             type: 'number',
+            role: 'state',
             states: {
                 1: 'AC discharging',
                 2: 'PR',
@@ -525,6 +594,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'CAR button status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'on',
@@ -535,6 +605,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charging status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'Charging',
@@ -546,6 +617,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Inverter use time',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -554,6 +626,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'BMS warning state: bit0: hi_temp; bit1: low_temp; bit2: overload; bit3: chg_flag',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -561,6 +634,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Car charger switch status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'on',
@@ -571,6 +645,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Discharging type',
             type: 'number',
+            role: 'state',
             states: {
                 1: 'AC discharging',
                 2: 'PR',
@@ -582,6 +657,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Type-C 1 temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -589,6 +665,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'DC charging time',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -596,12 +673,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'System version',
             type: 'number',
+            role: 'state',
         },
     },
     'mppt.carTemp': {
         common: {
             desc: 'Car charging temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -609,12 +688,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Product model',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_bmsStatus.minCellVol': {
         common: {
             desc: 'Minimum cell voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -622,6 +703,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -629,6 +711,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Wi-Fi mode on power on',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'Default mode (STA)',
                 1: 'Restore last usage mode (STA/AP)',
@@ -639,6 +722,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Time remaining before full charging / full discharge (if negative)',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -646,6 +730,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Maximum cell voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -653,6 +738,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'BMS type',
             type: 'number',
+            role: 'state',
             states: {
                 1: 'lithium battery',
                 2: 'oil-powered',
@@ -663,6 +749,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Maximum cell temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -670,6 +757,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV output current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -678,6 +766,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: '4+8 ports; only supports left port status identification: 0: NULL; 1: Extra battery; 2: Smart generator',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -685,6 +774,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Cell material LI/LFP/LA, battery capacity type',
             type: 'number',
+            role: 'state',
             states: {
                 1: '2.5 Ah per battery',
                 2: '2.0 Ah per battery',
@@ -695,6 +785,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Minimum MOS temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -702,18 +793,21 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV charging pause flag',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_emsStatus.minOpenOilEb': {
         common: {
             desc: 'Enable SOC of Smart Generator',
             type: 'number',
+            role: 'state',
         },
     },
     'mppt.acStandbyMins': {
         common: {
             desc: 'Auto shutdown when there is no load',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -721,6 +815,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Auto shutdown when there is no load',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -728,6 +823,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charger type',
             type: 'number',
+            role: 'state',
             states: {
                 1: 'AC charging',
                 2: 'DC adapter charging',
@@ -741,6 +837,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Cumulative solar charge capacity',
             type: 'number',
+            role: 'state',
             unit: 'Wh',
         },
     },
@@ -748,6 +845,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'CAR temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -755,12 +853,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'BQ hardware protection register',
             type: 'number',
+            role: 'state',
         },
     },
     'inv.acInAmp': {
         common: {
             desc: 'Inverter input current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -768,6 +868,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Remaining charging time',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -775,6 +876,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Cumulative AC power discharged',
             type: 'number',
+            role: 'state',
             unit: 'Wh',
         },
     },
@@ -782,12 +884,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Battery pack enabling status',
             type: 'number',
+            role: 'state',
         },
     },
     'pd.qcUsb2Watts': {
         common: {
             desc: 'qc_usb2 output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -795,6 +899,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Wireless charging output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -802,12 +907,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'BMS number',
             type: 'number',
+            role: 'state',
         },
     },
     'pd.chgPowerAC': {
         common: {
             desc: 'Cumulative AC charge (wall socket)',
             type: 'number',
+            role: 'state',
             unit: 'Wh',
         },
     },
@@ -815,6 +922,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'LCD screen timeout',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -822,6 +930,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Battery level',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -829,6 +938,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Inverter input voltage',
             type: 'number',
+            role: 'state',
             unit: 'mV',
         },
     },
@@ -836,6 +946,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Maximum charging power for AC',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -843,6 +954,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Minimum charging power for AC',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -850,6 +962,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Buzzer status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'Default',
                 1: 'Silent mode',
@@ -860,12 +973,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'System version: 0x0102002F = V1.2.0.47',
             type: 'number',
+            role: 'state',
         },
     },
     'mppt.dc24vTemp': {
         common: {
             desc: 'DCDC 24 V temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -873,12 +988,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Charge command',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_bmsStatus.tagChgAmp': {
         common: {
             desc: 'Target charging current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -886,6 +1003,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Maximum MOS temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -893,6 +1011,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'AC maximum charging power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -900,6 +1019,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'qc_usb1 output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -908,6 +1028,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Reserve 2 bytes',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -915,6 +1036,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Minimum cell temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -922,6 +1044,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Cumulative DC charge (adapter)',
             type: 'number',
+            role: 'state',
             unit: 'Wh',
         },
     },
@@ -929,6 +1052,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Standby auto shutdown time',
             type: 'number',
+            role: 'state',
             unit: 'min.',
             min: 0,
             max: 5999,
@@ -938,12 +1062,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'MPPT version number',
             type: 'number',
+            role: 'state',
         },
     },
     'inv.cfgAcOutFreq': {
         common: {
             desc: 'Configured output frequency for inverter',
             type: 'number',
+            role: 'state',
             unit: 'Hz',
         },
     },
@@ -951,6 +1077,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'XT60 paddle status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'Not detected',
                 1: 'MPPT',
@@ -962,6 +1089,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Health status SoH',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -969,18 +1097,21 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Global error code',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_emsStatus.openUpsFlag': {
         common: {
             desc: 'UPS mode enable flag',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_emsStatus.minDsgSoc': {
         common: {
             desc: 'Minimum discharge SoC',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -988,6 +1119,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'DC 12 V 30 A output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -995,6 +1127,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'USB QC use time',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -1002,6 +1135,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'DC button status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'off',
                 1: 'on',
@@ -1012,12 +1146,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Time remaining',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_emsStatus.emsIsNormalFlag': {
         common: {
             desc: 'EMS status',
             type: 'number',
+            role: 'state',
             states: {
                 0: 'sleep',
                 1: 'normal',
@@ -1028,6 +1164,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PV input power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -1035,6 +1172,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'USB use time',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -1042,6 +1180,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'MPPT use time',
             type: 'number',
+            role: 'state',
             unit: 'sec.',
         },
     },
@@ -1050,6 +1189,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Reserve 8 bytes',
             type: 'number',
+            role: 'state',
         },
     },
     */
@@ -1057,6 +1197,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'MPPT temperature',
             type: 'number',
+            role: 'state',
             unit: '°C',
         },
     },
@@ -1064,12 +1205,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Wi-Fi signal strength',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_bmsStatus.amp': {
         common: {
             desc: 'Current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -1077,12 +1220,14 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'PSDR model code (corresponds to dip Switch and high-low voltage switch)',
             type: 'number',
+            role: 'state',
         },
     },
     'bms_emsStatus.lcdShowSoc': {
         common: {
             desc: 'SoC value displayed on LCD',
             type: 'number',
+            role: 'state',
             unit: '%',
         },
     },
@@ -1090,6 +1235,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Output voltage configured for the inverter',
             type: 'number',
+            role: 'state',
             unit: 'V',
         },
     },
@@ -1097,18 +1243,21 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'BMS model',
             type: 'number',
+            role: 'state',
         },
     },
     'pd.errCode': {
         common: {
             desc: 'Global error code',
             type: 'number',
+            role: 'state',
         },
     },
     'pd.carWatts': {
         common: {
             desc: 'Car output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -1116,6 +1265,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Normal USB2 output power',
             type: 'number',
+            role: 'state',
             unit: 'W',
         },
     },
@@ -1123,6 +1273,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'DC maximum charging current',
             type: 'number',
+            role: 'state',
             unit: 'mA',
         },
     },
@@ -1130,6 +1281,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'Remaining discharging time',
             type: 'number',
+            role: 'state',
             unit: 'min.',
         },
     },
@@ -1137,6 +1289,7 @@ export const knownStates: Record<string, { common: object }> = {
         common: {
             desc: 'System version',
             type: 'number',
+            role: 'state',
         },
     },
 };

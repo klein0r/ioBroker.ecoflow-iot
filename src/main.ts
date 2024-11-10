@@ -6,6 +6,15 @@ import mqtt from 'mqtt';
 import { EcoflowApi } from './lib/ecoflow-api';
 import { knownStates as efKnownStates } from './lib/ecoflow-states';
 
+type QuotaDescription = {
+    dataType: string;
+    objId: string;
+};
+
+type ModuleTypeDescription = Record<string, QuotaDescription>;
+
+type DeviceDescription = Record<string, ModuleTypeDescription>;
+
 type MqttCredentials = {
     user: string;
     password: string;
@@ -17,7 +26,7 @@ type MqttCredentials = {
 class EcoflowIot extends utils.Adapter {
     private apiConnected: boolean;
     private ecoFlowApiClient: EcoflowApi.Client | null;
-    private knownDevices: Record<string, Record<string, string>>;
+    private knownDevices: Record<string /* sn */, DeviceDescription>;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -55,12 +64,12 @@ class EcoflowIot extends utils.Adapter {
 
             const deviceQuota = await this.ecoFlowApiClient.getDeviceQuota(device.sn);
 
-            const moduleTypes = {
-                pd: { moduleType: 1, prefix: 'pd' },
-                bms: { moduleType: 2, prefix: 'bms_bmsStatus' },
-                inv: { moduleType: 3, prefix: 'inv' },
-                bms_slave: { moduleType: 4, prefix: 'bms_emsStatus' },
-                mppt: { moduleType: 5, prefix: 'mppt' },
+            const moduleTypes: Record<string, { moduleType: string; prefix: string }> = {
+                pd: { moduleType: '1', prefix: 'pd' },
+                bms: { moduleType: '2', prefix: 'bms_bmsStatus' },
+                inv: { moduleType: '3', prefix: 'inv' },
+                bms_slave: { moduleType: '4', prefix: 'bms_emsStatus' },
+                mppt: { moduleType: '5', prefix: 'mppt' },
             };
 
             await this.extendObject(`devices.${device.sn}`, {
@@ -74,44 +83,50 @@ class EcoflowIot extends utils.Adapter {
                 },
             });
 
-            for (const [type, config] of Object.entries(moduleTypes)) {
-                this.knownDevices[device.sn] = {};
+            this.knownDevices[device.sn] = {};
 
-                await this.extendObject(`devices.${device.sn}.${type}`, {
+            for (const [type, config] of Object.entries(moduleTypes)) {
+                this.knownDevices[device.sn][config.moduleType] = {};
+
+                const objIdPrefix = `devices.${device.sn}.${type}`;
+
+                await this.extendObject(objIdPrefix, {
                     type: 'channel',
                     common: {
-                        name: `${type} (${config.moduleType})`,
+                        name: `${config.prefix} (${config.moduleType})`,
                     },
                     native: {},
                 });
 
-                if (config.prefix) {
-                    const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
+                const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
 
-                    for (const quota of moduleTypeQuota) {
-                        const quotaId = quota.replace(`${config.prefix}.`, '');
-                        const efState = Object.hasOwn(efKnownStates, quota) ? efKnownStates[quota].common : {};
-                        const objId = `devices.${device.sn}.${type}.${quotaId}`;
+                for (const quota of moduleTypeQuota) {
+                    const quotaId = quota.replace(`${config.prefix}.`, '');
+                    const efState = Object.hasOwn(efKnownStates, quota) ? efKnownStates[quota] : {};
+                    const objId = `${objIdPrefix}.${quotaId}`;
 
-                        this.knownDevices[device.sn][`${config.moduleType}_${quotaId}`] = objId;
+                    this.knownDevices[device.sn][config.moduleType][quotaId] = {
+                        objId,
+                        dataType: efState?.common?.type ?? 'mixed',
+                    };
 
-                        await this.extendObject(objId, {
-                            type: 'state',
-                            common: {
-                                name: quota,
-                                role: 'value',
-                                type: 'mixed',
-                                read: true,
-                                write: false,
-                                ...efState,
-                            },
-                            native: {
-                                quota,
-                                moduleType: config.moduleType,
-                            },
-                        });
-                        await this.setState(`devices.${device.sn}.${type}.${quotaId}`, { val: deviceQuota[quota], ack: true });
-                    }
+                    await this.extendObject(objId, {
+                        type: 'state',
+                        common: {
+                            name: quota,
+                            role: 'state',
+                            type: 'mixed',
+                            read: true,
+                            write: false,
+                            ...(efState?.common ?? {}),
+                        },
+                        native: {
+                            quota,
+                            moduleType: config.moduleType,
+                        },
+                    });
+
+                    await this.setState(`devices.${device.sn}.${type}.${quotaId}`, { val: deviceQuota[quota], ack: true });
                 }
             }
         }
@@ -139,16 +154,21 @@ class EcoflowIot extends utils.Adapter {
 
             // Find matching device
             for (const [sn, quota] of Object.entries(this.knownDevices)) {
+                this.log.debug(`[MQTT client] Searching ${sn} in topic ${topic}`);
                 if (topic.includes(sn)) {
                     try {
                         const payload = message.toString();
                         const payloadObj = JSON.parse(payload);
 
-                        for (const [param, val] of payloadObj.params) {
-                            const objId = quota?.[`${payloadObj.moduleType}_${param}`];
-                            if (objId) {
-                                this.log.debug(`[MQTT client] Setting ${objId} to ${val}`);
-                                this.setState(objId, { val, ack: true, c: topic });
+                        for (const [param, val] of Object.entries(payloadObj.params)) {
+                            const quotaDescription = quota?.[payloadObj.moduleType]?.[param];
+                            if (quotaDescription) {
+                                this.log.debug(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
+                                this.setState(quotaDescription.objId, {
+                                    val: quotaDescription.dataType === 'number' ? val : String(val),
+                                    ack: true,
+                                    c: topic,
+                                });
                             }
                         }
                     } catch {}
