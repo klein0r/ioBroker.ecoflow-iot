@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ecoflow-iot",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "news": {
+      "0.0.5": {
+        "en": "Added states for mqtt credentials\nAll states are numbers",
+        "de": "Hinzugefügt Zustände für mqtt Anmeldeinformationen\nAlle Zustände sind Zahlen",
+        "ru": "Добавленные состояния для mqtt\nВсе штаты",
+        "pt": "Adicionados estados para credenciais mqtt\nTodos os estados são números",
+        "nl": "Toegevoegde status voor mqtt-gegevens\nAlle staten zijn getallen",
+        "fr": "Ajouté des états pour les identifiants mqtt\nTous les états sont des nombres",
+        "it": "Aggiunti stati per credenziali di mqtt\nTutti gli stati sono numeri",
+        "es": "Estados adicionales para credenciales de mqtt\nTodos los estados son números",
+        "pl": "Dodano stany dla mandatów mqtt\nWszystkie stany są liczbami",
+        "uk": "Додано стани для облікових записів mqtt\nВсі держави є числа",
+        "zh-cn": "Mqtt 证书添加状态\n所有州都是数字"
+      },
       "0.0.4": {
         "en": "initial release",
         "de": "erstausstrahlung",

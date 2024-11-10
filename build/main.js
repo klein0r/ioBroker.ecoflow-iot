@@ -22,12 +22,14 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 ));
 var utils = __toESM(require("@iobroker/adapter-core"));
+var import_mqtt = __toESM(require("mqtt"));
 var import_ecoflow_api = require("./lib/ecoflow-api");
 var import_ecoflow_states = require("./lib/ecoflow-states");
 class EcoflowIot extends utils.Adapter {
   apiConnected;
   ecoFlowApiClient;
   knownDevices;
+  mqttConnection;
   constructor(options = {}) {
     super({
       ...options,
@@ -40,7 +42,14 @@ class EcoflowIot extends utils.Adapter {
     this.on("stateChange", this.onStateChange.bind(this));
     this.on("unload", this.onUnload.bind(this));
   }
+  getEcoflowApiClient() {
+    if (!this.ecoFlowApiClient) {
+      this.ecoFlowApiClient = new import_ecoflow_api.EcoflowApi.Client(this.log, this.config.accessKey, this.config.secretKey);
+    }
+    return this.ecoFlowApiClient;
+  }
   async onReady() {
+    var _a;
     this.setApiConnected(false);
     if (!this.config.accessKey || !this.config.secretKey) {
       if (typeof this.terminate === "function") {
@@ -50,17 +59,17 @@ class EcoflowIot extends utils.Adapter {
       }
       return;
     }
-    this.ecoFlowApiClient = new import_ecoflow_api.EcoflowApi.Client(this.log, this.config.accessKey, this.config.secretKey);
-    const deviceList = await this.ecoFlowApiClient.getDeviceList();
+    const ecoFlowApiClient = this.getEcoflowApiClient();
+    const deviceList = await ecoFlowApiClient.getDeviceList();
     for (const device of deviceList) {
       this.log.debug(`[onReady] Found device ${device.sn}: ${device.productName} (online: ${device.online})`);
-      const deviceQuota = await this.ecoFlowApiClient.getDeviceQuota(device.sn);
+      const deviceQuota = await ecoFlowApiClient.getDeviceQuota(device.sn);
       const moduleTypes = {
-        PD: { moduleType: 1, prefix: "pd" },
-        BMS: { moduleType: 2, prefix: "bms_emsStatus" },
-        INV: { moduleType: 3, prefix: "inv" },
-        BMS_SLAVE: { moduleType: 4, prefix: "bms_bmsStatus" },
-        MPPT: { moduleType: 5, prefix: "mppt" }
+        pd: { moduleType: "1", prefix: "pd" },
+        bms: { moduleType: "2", prefix: "bms_bmsStatus" },
+        inv: { moduleType: "3", prefix: "inv" },
+        bms_slave: { moduleType: "4", prefix: "bms_emsStatus" },
+        mppt: { moduleType: "5", prefix: "mppt" }
       };
       await this.extendObject(`devices.${device.sn}`, {
         type: "device",
@@ -72,43 +81,123 @@ class EcoflowIot extends utils.Adapter {
           sn: device.sn
         }
       });
+      this.knownDevices[device.sn] = {};
       for (const [type, config] of Object.entries(moduleTypes)) {
-        this.knownDevices[device.sn] = {};
-        await this.extendObject(`devices.${device.sn}.${type}`, {
+        this.knownDevices[device.sn][config.moduleType] = {};
+        const objIdPrefix = `devices.${device.sn}.${type}`;
+        await this.extendObject(objIdPrefix, {
           type: "channel",
           common: {
-            name: `${type} (${config.moduleType})`
+            name: `${config.prefix} (${config.moduleType})`
           },
           native: {}
         });
-        if (config.prefix) {
-          const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
-          for (const quota of moduleTypeQuota) {
+        const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
+        for (const quota of moduleTypeQuota) {
+          const valueType = typeof deviceQuota[quota];
+          if (valueType === "number") {
             const quotaId = quota.replace(`${config.prefix}.`, "");
-            const efState = Object.hasOwn(import_ecoflow_states.knownStates, quota) ? import_ecoflow_states.knownStates[quota].common : {};
-            const objId = `devices.${device.sn}.${type}.${quotaId}`;
-            this.knownDevices[device.sn][quota] = objId;
+            const efState = Object.hasOwn(import_ecoflow_states.knownStates, quota) ? import_ecoflow_states.knownStates[quota] : {};
+            const objId = `${objIdPrefix}.${quotaId}`;
+            this.knownDevices[device.sn][config.moduleType][quotaId] = {
+              objId,
+              valueType
+            };
             await this.extendObject(objId, {
               type: "state",
               common: {
                 name: quota,
                 role: "value",
-                type: "mixed",
+                type: "number",
                 read: true,
                 write: false,
-                ...efState
+                ...(_a = efState == null ? void 0 : efState.common) != null ? _a : {}
               },
               native: {
                 quota,
                 moduleType: config.moduleType
               }
             });
-            await this.setState(`devices.${device.sn}.${type}.${quotaId}`, { val: deviceQuota[quota], ack: true });
+            await this.setState(objId, { val: deviceQuota[quota], ack: true });
           }
         }
       }
     }
+    const mqttConnection = await this.getMqttConnection();
+    const mqttCredentials = mqttConnection.credentials;
+    const mqttClient = mqttConnection.client;
+    this.log.info(`MQTT Client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`);
+    for (const sn of Object.keys(this.knownDevices)) {
+      await mqttClient.subscribeAsync(`/open/${mqttCredentials.user}/${sn}/quota`);
+      this.log.debug(`MQTT Client subscribed to /open/${mqttCredentials.user}/${sn}/quota`);
+    }
+    mqttClient.on("message", (topic, message) => {
+      var _a2;
+      this.log.debug(`[MQTT client] Received message on topic ${topic}: ${message}`);
+      for (const [sn, quota] of Object.entries(this.knownDevices)) {
+        this.log.debug(`[MQTT client] Searching ${sn} in topic ${topic}`);
+        if (topic.includes(sn)) {
+          try {
+            const payload = message.toString();
+            const payloadObj = JSON.parse(payload);
+            for (const [param, val] of Object.entries(payloadObj.params)) {
+              const quotaDescription = (_a2 = quota == null ? void 0 : quota[payloadObj.moduleType]) == null ? void 0 : _a2[param];
+              if (quotaDescription) {
+                const valueType = typeof val;
+                if (valueType === "number" && valueType === quotaDescription.valueType) {
+                  this.log.debug(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
+                  this.setState(quotaDescription.objId, {
+                    val: Number(val),
+                    ack: true,
+                    c: topic
+                  });
+                }
+              }
+            }
+          } catch {
+          }
+        }
+      }
+    });
     await this.subscribeStatesAsync("*");
+  }
+  async getMqttConnection() {
+    if (!this.mqttConnection) {
+      const mqttCredentials = await this.getMqttClientCredentials();
+      const mqttClient = import_mqtt.default.connect({
+        protocol: mqttCredentials.protocol,
+        host: mqttCredentials.url,
+        port: mqttCredentials.port,
+        username: mqttCredentials.user,
+        password: mqttCredentials.password
+      });
+      this.log.info(`MQTT Client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`);
+      await this.setApiConnected(true);
+      this.mqttConnection = {
+        client: mqttClient,
+        credentials: mqttCredentials
+      };
+    }
+    return this.mqttConnection;
+  }
+  async getMqttClientCredentials(forceRecreate) {
+    if (forceRecreate) {
+      const ecoFlowApiClient = this.getEcoflowApiClient();
+      const certificate = await ecoFlowApiClient.getCertificateAcquisition();
+      await this.setState("mqtt.user", { val: certificate.certificateAccount, ack: true });
+      await this.setState("mqtt.password", { val: certificate.certificatePassword, ack: true });
+      await this.setState("mqtt.url", { val: certificate.url, ack: true });
+      await this.setState("mqtt.port", { val: Number(certificate.port), ack: true });
+      await this.setState("mqtt.protocol", { val: certificate.protocol, ack: true });
+    }
+    const mqttStates = await this.getStatesAsync("mqtt.*");
+    return {
+      user: String(mqttStates[`${this.namespace}.mqtt.user`].val),
+      password: String(mqttStates[`${this.namespace}.mqtt.password`].val),
+      url: String(mqttStates[`${this.namespace}.mqtt.url`].val),
+      port: Number(mqttStates[`${this.namespace}.mqtt.port`].val),
+      protocol: mqttStates[`${this.namespace}.mqtt.protocol`].val == "mqtts" ? "mqtts" : "mqtt"
+    };
   }
   async setApiConnected(connection) {
     if (connection !== this.apiConnected) {
@@ -133,6 +222,10 @@ class EcoflowIot extends utils.Adapter {
   async onUnload(callback) {
     try {
       await this.setApiConnected(false);
+      if (this.mqttConnection) {
+        await this.mqttConnection.client.endAsync();
+        this.mqttConnection = void 0;
+      }
       callback();
     } catch {
       callback();

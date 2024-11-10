@@ -37,7 +37,7 @@ Control EcoFlow devices via the official web api
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 0.0.5 (2024-11-10)
 
 * (@klein0r) Added states for mqtt credentials
 * (@klein0r) All states are numbers
