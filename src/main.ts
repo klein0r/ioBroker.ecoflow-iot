@@ -27,6 +27,7 @@ class EcoflowIot extends utils.Adapter {
     private apiConnected: boolean;
     private ecoFlowApiClient: EcoflowApi.Client | null;
     private knownDevices: Record<string /* sn */, DeviceDescription>;
+    private mqttConnection?: { client: mqtt.MqttClient; credentials: MqttCredentials };
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -110,6 +111,7 @@ class EcoflowIot extends utils.Adapter {
 
                 for (const quota of moduleTypeQuota) {
                     const valueType = typeof deviceQuota[quota];
+                    // TODO: Other types?
                     if (valueType === 'number') {
                         const quotaId = quota.replace(`${config.prefix}.`, '');
                         const efState = Object.hasOwn(efKnownStates, quota) ? efKnownStates[quota] : {};
@@ -189,21 +191,27 @@ class EcoflowIot extends utils.Adapter {
     }
 
     private async getMqttConnection(): Promise<{ client: mqtt.MqttClient; credentials: MqttCredentials }> {
-        const mqttCredentials = await this.getMqttClientCredentials();
-        const mqttClient = mqtt.connect({
-            protocol: mqttCredentials.protocol,
-            host: mqttCredentials.url,
-            port: mqttCredentials.port,
-            username: mqttCredentials.user,
-            password: mqttCredentials.password,
-        });
+        if (!this.mqttConnection) {
+            const mqttCredentials = await this.getMqttClientCredentials();
+            const mqttClient = mqtt.connect({
+                protocol: mqttCredentials.protocol,
+                host: mqttCredentials.url,
+                port: mqttCredentials.port,
+                username: mqttCredentials.user,
+                password: mqttCredentials.password,
+            });
 
-        this.log.info(`MQTT Client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`);
+            this.log.info(`MQTT Client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`);
 
-        return {
-            client: mqttClient,
-            credentials: mqttCredentials,
-        };
+            await this.setApiConnected(true);
+
+            this.mqttConnection = {
+                client: mqttClient,
+                credentials: mqttCredentials,
+            };
+        }
+
+        return this.mqttConnection;
     }
 
     private async getMqttClientCredentials(forceRecreate?: boolean): Promise<MqttCredentials> {
@@ -259,6 +267,11 @@ class EcoflowIot extends utils.Adapter {
     private async onUnload(callback: () => void): Promise<void> {
         try {
             await this.setApiConnected(false);
+
+            if (this.mqttConnection) {
+                await this.mqttConnection.client.endAsync();
+                this.mqttConnection = undefined;
+            }
 
             callback();
         } catch {
