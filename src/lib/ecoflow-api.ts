@@ -21,7 +21,7 @@ export namespace EcoflowApi {
         certificatePassword: string;
         url: string;
         port: string;
-        protocol: string;
+        protocol: 'mqtt' | 'mqtts';
     };
 
     export class Client {
