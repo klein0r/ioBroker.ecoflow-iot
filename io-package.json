@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ecoflow-iot",
-    "version": "0.0.5",
+    "version": "0.0.6",
     "news": {
+      "0.0.6": {
+        "en": "Set new values via mqtt\nGenerate new mqtt credentials if neccessary",
+        "de": "Neue Werte über mqt einstellen\nGenerieren Sie neue mqtt Anmeldeinformationen, wenn erforderlich",
+        "ru": "Настройка новых значений через mqtt\nСоздайте новые учетные данные mqtt, если неактивный",
+        "pt": "Definir novos valores via mqtt\nGerar novas credenciais mqtt se necessário",
+        "nl": "Nieuwe waarden instellen via mqtt\nNieuwe mqtt-gegevens genereren indien noodzakelijk",
+        "fr": "Définir de nouvelles valeurs via mqtt\nGénérer de nouveaux identifiants mqtt si nécessaire",
+        "it": "Impostare nuovi valori tramite mqtt\nGenerare nuove credenziali di mqtt se neccessaria",
+        "es": "Establecer nuevos valores a través de mqt\nGenerar nuevas credenciales de mqtt si es necesario",
+        "pl": "Ustaw nowe wartości przez mqtt\nGeneruj nowe referencje mqtt jeśli jest to konieczne",
+        "uk": "Встановити нові значення через mqtt\nГенерувати нові облікові дані mqtt при необхідності",
+        "zh-cn": "通过 mqtt 设定新值\n如果失败, 生成新的 mqtt 证书"
+      },
       "0.0.5": {
         "en": "Added states for mqtt credentials\nAll states are numbers",
         "de": "Hinzugefügt Zustände für mqtt Anmeldeinformationen\nAlle Zustände sind Zahlen",
