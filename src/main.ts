@@ -170,7 +170,19 @@ class EcoflowIot extends utils.Adapter {
     private async getStoredMqttClientCredentials(): Promise<EcoflowMqtt.MqttCredentials | undefined> {
         const mqttStates = await this.getStatesAsync('mqtt.*');
 
-        // TODO: Return undefined if states are empty
+        let isValid = true;
+        const checkIDs = ['user', 'password', 'url', 'port', 'protocol'];
+        for (const checkID of checkIDs) {
+            const checkState = mqttStates[`${this.namespace}.mqtt.${checkID}`];
+            if (!checkState || !checkState.val) {
+                isValid = false;
+            }
+        }
+
+        if (!isValid) {
+            this.log.info('Stored MQTT credentials are empty oder invalid. Recreating new information.');
+            return undefined;
+        }
 
         return {
             user: String(mqttStates[`${this.namespace}.mqtt.user`].val),

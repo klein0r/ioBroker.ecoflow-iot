@@ -40,6 +40,7 @@ Control EcoFlow devices via the official web api
 ### **WORK IN PROGRESS**
 
 * (@klein0r) Set new values via mqtt
+* (@klein0r) Generate new mqtt credentials if neccessary
 
 ### 0.0.5 (2024-11-10)
 
