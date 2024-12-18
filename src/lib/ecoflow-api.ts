@@ -12,6 +12,7 @@ export namespace EcoflowApi {
 
     export type EcoFlowDevice = {
         sn: string;
+        deviceName?: string;
         online: number;
         productName: string;
     };

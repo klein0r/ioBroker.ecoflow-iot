@@ -37,6 +37,10 @@ Control EcoFlow devices via the official web api
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
+### **WORK IN PROGRESS**
+
+* (@klein0r) Added known device type list
+
 ### 0.0.6 (2024-11-19)
 
 * (@klein0r) Set new values via mqtt

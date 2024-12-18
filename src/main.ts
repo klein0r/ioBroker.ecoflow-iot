@@ -20,6 +20,7 @@ class EcoflowIot extends utils.Adapter {
     private ecoFlowApiClient?: EcoflowApi.Client;
     private ecoFlowMqttClient?: EcoflowMqtt.Client;
     private knownDevices: Record<string /* sn */, DeviceDescription>;
+    private knownProductTypes: Array<string>;
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -29,6 +30,21 @@ class EcoflowIot extends utils.Adapter {
 
         this.apiConnected = false;
         this.knownDevices = {};
+
+        this.knownProductTypes = [
+            // River
+            'RIVER 2', // untested!
+            'RIVER 2 Pro',
+            'RIVER 2 Max', // untested!
+            'RIVER 3', // untested!
+            // Delta
+            // 'DELTA Pro', // untested! https://developer-eu.ecoflow.com/us/document/deltapro
+            'DELTA Max', // untested!
+            'DELTA 2', // untested! https://developer-eu.ecoflow.com/us/document/delta2
+            'DELTA 2 Max', // untested! https://developer-eu.ecoflow.com/us/document/delta2max
+            'DELTA Pro 3', // untested! https://developer-eu.ecoflow.com/us/document/deltaPro3
+            // 'PowerStream', // untested! https://developer-eu.ecoflow.com/us/document/powerStreamMicroInverter
+        ];
 
         this.on('ready', this.onReady.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
@@ -62,7 +78,11 @@ class EcoflowIot extends utils.Adapter {
 
         const deviceList = await ecoFlowApiClient.getDeviceList();
         for (const device of deviceList) {
-            this.log.debug(`[onReady] Found device ${device.sn}: ${device.productName} (online: ${device.online})`);
+            if (this.knownProductTypes.includes(device.productName)) {
+                this.log.info(`[onReady] Found device ${device.sn}: ${device.productName} / ${device.deviceName ?? '<no name>'} (online: ${device.online})`);
+            } else {
+                this.log.warn(`[onReady] Found unknonwn device ${device.sn}: ${device.productName} / ${device.deviceName ?? '<no name>'} (online: ${device.online})`);
+            }
 
             const deviceQuota = await ecoFlowApiClient.getDeviceQuota(device.sn);
 
