@@ -12,9 +12,11 @@
                     "newLine": true,
                     "type": "text",
                     "label": "Access Key",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
-                    "lg": 12
+                    "lg": 12,
+                    "xl": 6
                 },
                 "secretKey": {
                     "newLine": true,
@@ -22,18 +24,22 @@
                     "repeat": false,
                     "visible": true,
                     "label": "Secret Key",
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
-                    "lg": 12
+                    "lg": 12,
+                    "xl": 6
                 },
                 "_headerOptionsSupport": {
                     "newLine": true,
                     "type": "header",
                     "text": "Support this project",
                     "size": 3,
+                    "xs": 12,
                     "sm": 12,
                     "md": 12,
-                    "lg": 12
+                    "lg": 12,
+                    "xl": 12
                 },
                 "_buyDeviceLink": {
                     "newLine": true,
@@ -55,16 +61,20 @@
                     "button": true,
                     "variant": "contained",
                     "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1NzYgNTEyIj48IS0tISBGb250IEF3ZXNvbWUgUHJvIDYuNC4wIGJ5IEBmb250YXdlc29tZSAtIGh0dHBzOi8vZm9udGF3ZXNvbWUuY29tIExpY2Vuc2UgLSBodHRwczovL2ZvbnRhd2Vzb21lLmNvbS9saWNlbnNlIChDb21tZXJjaWFsIExpY2Vuc2UpIENvcHlyaWdodCAyMDIzIEZvbnRpY29ucywgSW5jLiAtLT48cGF0aCBkPSJNMCAyNEMwIDEwLjcgMTAuNyAwIDI0IDBINjkuNWMyMiAwIDQxLjUgMTIuOCA1MC42IDMyaDQxMWMyNi4zIDAgNDUuNSAyNSAzOC42IDUwLjRsLTQxIDE1Mi4zYy04LjUgMzEuNC0zNyA1My4zLTY5LjUgNTMuM0gxNzAuN2w1LjQgMjguNWMyLjIgMTEuMyAxMi4xIDE5LjUgMjMuNiAxOS41SDQ4OGMxMy4zIDAgMjQgMTAuNyAyNCAyNHMtMTAuNyAyNC0yNCAyNEgxOTkuN2MtMzQuNiAwLTY0LjMtMjQuNi03MC43LTU4LjVMNzcuNCA1NC41Yy0uNy0zLjgtNC02LjUtNy45LTYuNUgyNEMxMC43IDQ4IDAgMzcuMyAwIDI0ek0xMjggNDY0YTQ4IDQ4IDAgMSAxIDk2IDAgNDggNDggMCAxIDEgLTk2IDB6bTMzNi00OGE0OCA0OCAwIDEgMSAwIDk2IDQ4IDQ4IDAgMSAxIDAtOTZ6Ii8+PC9zdmc+",
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
-                    "lg": 6
+                    "lg": 6,
+                    "xl": 6
                 },
                 "_ioBrokerKursBanner": {
                     "newLine": true,
                     "type": "staticImage",
+                    "xs": 12,
                     "sm": 12,
                     "md": 6,
                     "lg": 6,
+                    "xl": 6,
                     "href": "https://haus-automatisierung.com/iobroker-kurs/?refid=iobroker-ecoflow-iot",
                     "src": "https://haus-automatisierung.com/images/ads/ioBroker-Kurs.png"
                 }
