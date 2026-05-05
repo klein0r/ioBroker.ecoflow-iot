@@ -71,7 +71,7 @@ class EcoflowIot extends utils.Adapter {
   }
   async onReady() {
     var _a, _b, _c, _d;
-    this.setApiConnected(false);
+    await this.setApiConnected(false);
     if (!this.config.accessKey || !this.config.secretKey) {
       this.log.error(`Access key and/or secret key is empty. Please check instance configuration and restart.`);
       if (typeof this.terminate === "function") {
@@ -85,9 +85,13 @@ class EcoflowIot extends utils.Adapter {
     const deviceList = await ecoFlowApiClient.getDeviceList();
     for (const device of deviceList) {
       if (this.knownProductTypes.includes(device.productName)) {
-        this.log.info(`[onReady] Found device ${device.sn}: ${device.productName} / ${(_a = device.deviceName) != null ? _a : "<no name>"} (online: ${device.online})`);
+        this.log.info(
+          `[onReady] Found device ${device.sn}: ${device.productName} / ${(_a = device.deviceName) != null ? _a : "<no name>"} (online: ${device.online})`
+        );
       } else {
-        this.log.warn(`[onReady] Found unknonwn device ${device.sn}: ${device.productName} / ${(_b = device.deviceName) != null ? _b : "<no name>"} (online: ${device.online})`);
+        this.log.warn(
+          `[onReady] Found unknonwn device ${device.sn}: ${device.productName} / ${(_b = device.deviceName) != null ? _b : "<no name>"} (online: ${device.online})`
+        );
       }
       const deviceQuota = await ecoFlowApiClient.getDeviceQuota(device.sn);
       const moduleTypes = {
@@ -153,8 +157,11 @@ class EcoflowIot extends utils.Adapter {
     }
     const mqttCredentials = await this.getStoredMqttClientCredentials();
     this.ecoFlowMqttClient = new import_ecoflow_mqtt.EcoflowMqtt.Client(this.log, this.getEcoflowApiClient(), mqttCredentials);
-    this.ecoFlowMqttClient.on("credentialUpdate", (mqttCredentials2) => this.updateMqttClientCredentials(mqttCredentials2));
-    this.ecoFlowMqttClient.on("newParamsEvent", (sn, moduleType, params) => {
+    this.ecoFlowMqttClient.on(
+      "credentialUpdate",
+      (mqttCredentials2) => this.updateMqttClientCredentials(mqttCredentials2)
+    );
+    this.ecoFlowMqttClient.on("newParamsEvent", async (sn, moduleType, params) => {
       var _a2, _b2;
       for (const [param, val] of Object.entries(params)) {
         const quotaDescription = (_b2 = (_a2 = this.knownDevices[sn]) == null ? void 0 : _a2[moduleType]) == null ? void 0 : _b2[param];
@@ -162,7 +169,7 @@ class EcoflowIot extends utils.Adapter {
           const valueType = typeof val;
           if (valueType === "number" && valueType === quotaDescription.valueType) {
             this.log.silly(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
-            this.setState(quotaDescription.objId, {
+            await this.setState(quotaDescription.objId, {
               val: Number(val),
               ack: true
             });
@@ -170,7 +177,7 @@ class EcoflowIot extends utils.Adapter {
         }
       }
     });
-    this.ecoFlowMqttClient.init(Object.keys(this.knownDevices));
+    await this.ecoFlowMqttClient.init(Object.keys(this.knownDevices));
     await this.subscribeStatesAsync("*");
   }
   async getStoredMqttClientCredentials() {
@@ -224,7 +231,9 @@ class EcoflowIot extends utils.Adapter {
         const operateParamName = (_c = stateObj == null ? void 0 : stateObj.native) == null ? void 0 : _c.operateParamName;
         const moduleType = stateObj == null ? void 0 : stateObj.native.moduleType;
         if (sn && operateType && moduleType) {
-          this.log.info(`${idNoNamespace} changed to ${state.val} - perform change of operateType ${operateType}, moduleType ${moduleType} for ${sn}`);
+          this.log.info(
+            `${idNoNamespace} changed to ${state.val} - perform change of operateType ${operateType}, moduleType ${moduleType} for ${sn}`
+          );
           const operateParams = {
             [operateParamName]: state.val
           };
@@ -254,7 +263,7 @@ class EcoflowIot extends utils.Adapter {
     }
   }
   removeNamespace(id) {
-    const re = new RegExp(this.namespace + "*\\.", "g");
+    const re = new RegExp(`${this.namespace}*\\.`, "g");
     return id.replace(re, "");
   }
   async onUnload(callback) {

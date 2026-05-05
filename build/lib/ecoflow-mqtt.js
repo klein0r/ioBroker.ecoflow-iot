@@ -92,7 +92,9 @@ var EcoflowMqtt;
         username: mqttCredentials.user,
         password: mqttCredentials.password
       });
-      this.logger.info(`MQTT client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`);
+      this.logger.info(
+        `MQTT client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`
+      );
       for (const sn of snList) {
         await mqttClient.subscribeAsync(`/open/${mqttCredentials.user}/${sn}/quota`);
         this.logger.debug(`MQTT Client subscribed to /open/${mqttCredentials.user}/${sn}/quota`);
@@ -100,7 +102,7 @@ var EcoflowMqtt;
         this.logger.debug(`MQTT Client subscribed to /open/${mqttCredentials.user}/${sn}/set_reply`);
       }
       mqttClient.on("message", (topic, message) => {
-        this.logger.debug(`[MQTT client] Received message on topic "${topic}": ${message}`);
+        this.logger.debug(`[MQTT client] Received message on topic "${topic}": ${message.toString()}`);
         for (const sn of snList) {
           if (topic.includes(sn)) {
             try {
@@ -112,6 +114,7 @@ var EcoflowMqtt;
                 this.logger.debug(`Received set reply: ${payload}`);
               }
             } catch {
+              this.logger.debug(`[MQTT client] device not matching`);
             }
           }
         }
@@ -127,7 +130,10 @@ var EcoflowMqtt;
           operateType,
           params
         };
-        await this.mqttClient.publishAsync(`/open/${this.mqttCredentials.user}/${sn}/set`, JSON.stringify(payload));
+        await this.mqttClient.publishAsync(
+          `/open/${this.mqttCredentials.user}/${sn}/set`,
+          JSON.stringify(payload)
+        );
         this.logger.debug(`[publishChange] Sent to ${sn}: ${JSON.stringify(payload)}`);
       }
     }

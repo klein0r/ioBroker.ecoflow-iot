@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "ecoflow-iot",
-    "version": "0.0.6",
+    "version": "0.1.0",
     "news": {
+      "0.1.0": {
+        "en": "Added known device type list\nadmin 7.6.20 and js-controller 6.0.11 (or later) are required",
+        "de": "Hinzugefügt bekannte Gerätetypliste\nadmin 7.6.20 und js-controller 6.0.11 (oder später) sind erforderlich",
+        "ru": "Добавлен список известных типов устройств\nadmin 7.6.20 и js-контроллер 6.0.11 (или более поздний)",
+        "pt": "Adicionado lista de tipos de dispositivos conhecidos\nadmin 7.6.20 e js-controller 6.0.11 (ou posterior) são necessários",
+        "nl": "Bekend apparaattypelijst toegevoegd\nadmin 7.6.20 en js-controller 6.0.11 (of later) zijn vereist",
+        "fr": "Ajout de la liste des types d'appareils connus\nadmin 7.6.20 et js-controller 6.0.11 (ou plus tard) sont requis",
+        "it": "Elenco di tipo di dispositivo noto\nadmin 7.6.20 e js-controller 6.0.11 (o più tardi) sono richiesti",
+        "es": "Lista del tipo de dispositivo conocido\nadmin 7.6.20 y js-controller 6.0.11 (o posterior) son necesarios",
+        "pl": "Dodano listę typu urządzenia\nwymagane jest admin 7.6.20 i js- controller 6.0.11 (lub później)",
+        "uk": "Додано список відомих пристроїв\nadmin 7.6.20 і js-controller 6.0.11 (або пізніше) обов'язкові",
+        "zh-cn": "添加已知设备类型列表\n需要admin 7.6.20和js控制器 6.0.11(或以后)"
+      },
       "0.0.6": {
         "en": "Set new values via mqtt\nGenerate new mqtt credentials if neccessary",
         "de": "Neue Werte über mqt einstellen\nGenerieren Sie neue mqtt Anmeldeinformationen, wenn erforderlich",

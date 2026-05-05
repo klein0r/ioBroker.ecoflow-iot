@@ -55,7 +55,9 @@ var EcoflowApi;
     }
     flattenKeys(obj, prefix) {
       const getPrefix = (k) => {
-        if (!prefix) return k;
+        if (!prefix) {
+          return k;
+        }
         return Array.isArray(obj) ? `${prefix}[${k}]` : `${prefix}.${k}`;
       };
       let res = {};
@@ -77,7 +79,7 @@ var EcoflowApi;
         const flatData = this.flattenKeys(data);
         const flatDataKeys = Object.keys(flatData);
         flatDataKeys.sort();
-        dataStr = flatDataKeys.map((k) => `${k}=${flatData[k]}`).join("&") + "&";
+        dataStr = `${flatDataKeys.map((k) => `${k}=${flatData[k]}`).join("&")}&`;
       }
       const uri = `${dataStr}accessKey=${this.accessKey}&nonce=${nonce}&timestamp=${timestamp}`;
       const sign = sha256(uri, this.secretKey);
@@ -93,7 +95,9 @@ var EcoflowApi;
           sign
         }
       });
-      this.logger.debug(`Received ${apiResponse.status} from ${method} to ${url} (${uri}): ${JSON.stringify(apiResponse.data)}`);
+      this.logger.debug(
+        `Received ${apiResponse.status} from ${method} to ${url} (${uri}): ${JSON.stringify(apiResponse.data)}`
+      );
       if (apiResponse.status === 200 && apiResponse.data.code == 0) {
         return apiResponse.data;
       }
