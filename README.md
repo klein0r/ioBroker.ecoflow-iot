@@ -40,7 +40,7 @@ Control EcoFlow devices via the official web api
 ### **WORK IN PROGRESS**
 
 * (@klein0r) Added known device type list
-* (@klein0r) admin 7.6.17 and js-controller 6.0.11 (or later) are required
+* (@klein0r) admin 7.6.20 and js-controller 6.0.11 (or later) are required
 
 ### 0.0.6 (2024-11-19)
 
