@@ -1,7 +1,8 @@
 import mqtt from 'mqtt';
 import { EventEmitter } from 'node:events';
-import { EcoflowApi } from './ecoflow-api';
+import type { EcoflowApi } from './ecoflow-api';
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace EcoflowMqtt {
     type LocalEventTypes = {
         credentialUpdate: [mqttCredentials: MqttCredentials];
@@ -11,15 +12,24 @@ export namespace EcoflowMqtt {
     class TypedEventEmitter<TEvents extends Record<string, any>> {
         private emitter = new EventEmitter();
 
-        public emit<TEventName extends keyof TEvents & string>(eventName: TEventName, ...eventArg: TEvents[TEventName]): void {
+        public emit<TEventName extends keyof TEvents & string>(
+            eventName: TEventName,
+            ...eventArg: TEvents[TEventName]
+        ): void {
             this.emitter.emit(eventName, ...(eventArg as []));
         }
 
-        public on<TEventName extends keyof TEvents & string>(eventName: TEventName, handler: (...eventArg: TEvents[TEventName]) => void): void {
+        public on<TEventName extends keyof TEvents & string>(
+            eventName: TEventName,
+            handler: (...eventArg: TEvents[TEventName]) => void,
+        ): void {
             this.emitter.on(eventName, handler as any);
         }
 
-        public off<TEventName extends keyof TEvents & string>(eventName: TEventName, handler: (...eventArg: TEvents[TEventName]) => void): void {
+        public off<TEventName extends keyof TEvents & string>(
+            eventName: TEventName,
+            handler: (...eventArg: TEvents[TEventName]) => void,
+        ): void {
             this.emitter.off(eventName, handler as any);
         }
     }
@@ -59,6 +69,7 @@ export namespace EcoflowMqtt {
             try {
                 this.mqttClient = await this.getMqttClient(mqttCredentials, snList);
             } catch (err) {
+                // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                 this.logger.error(`Mqtt client init failed: ${err}`);
             }
         }
@@ -88,7 +99,9 @@ export namespace EcoflowMqtt {
                 password: mqttCredentials.password,
             });
 
-            this.logger.info(`MQTT client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`);
+            this.logger.info(
+                `MQTT client connected to ${mqttCredentials.url}:${mqttCredentials.port} (user: ${mqttCredentials.user})`,
+            );
 
             for (const sn of snList) {
                 await mqttClient.subscribeAsync(`/open/${mqttCredentials.user}/${sn}/quota`);
@@ -99,7 +112,7 @@ export namespace EcoflowMqtt {
             }
 
             mqttClient.on('message', (topic, message) => {
-                this.logger.debug(`[MQTT client] Received message on topic ${topic}: ${message}`);
+                this.logger.debug(`[MQTT client] Received message on topic "${topic}": ${message.toString()}`);
 
                 // Find matching device
                 for (const sn of snList) {
@@ -117,7 +130,9 @@ export namespace EcoflowMqtt {
 
                                 this.logger.debug(`Received set reply: ${payload}`);
                             }
-                        } catch {}
+                        } catch {
+                            this.logger.debug(`[MQTT client] device not matching`);
+                        }
                     }
                 }
             });
@@ -125,7 +140,12 @@ export namespace EcoflowMqtt {
             return mqttClient;
         }
 
-        public async publishChange(sn: string, moduleType: string, operateType: string, params: Record<string, any>): Promise<void> {
+        public async publishChange(
+            sn: string,
+            moduleType: string,
+            operateType: string,
+            params: Record<string, any>,
+        ): Promise<void> {
             if (this.mqttClient && this.mqttCredentials) {
                 const payload = {
                     id: this.mqttPublishId++,
@@ -135,7 +155,10 @@ export namespace EcoflowMqtt {
                     params,
                 };
 
-                await this.mqttClient.publishAsync(`/open/${this.mqttCredentials.user}/${sn}/set`, JSON.stringify(payload));
+                await this.mqttClient.publishAsync(
+                    `/open/${this.mqttCredentials.user}/${sn}/set`,
+                    JSON.stringify(payload),
+                );
                 this.logger.debug(`[publishChange] Sent to ${sn}: ${JSON.stringify(payload)}`);
             }
         }

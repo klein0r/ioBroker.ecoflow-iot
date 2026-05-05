@@ -60,7 +60,7 @@ class EcoflowIot extends utils.Adapter {
     }
 
     private async onReady(): Promise<void> {
-        this.setApiConnected(false);
+        await this.setApiConnected(false);
 
         if (!this.config.accessKey || !this.config.secretKey) {
             this.log.error(`Access key and/or secret key is empty. Please check instance configuration and restart.`);
@@ -79,9 +79,13 @@ class EcoflowIot extends utils.Adapter {
         const deviceList = await ecoFlowApiClient.getDeviceList();
         for (const device of deviceList) {
             if (this.knownProductTypes.includes(device.productName)) {
-                this.log.info(`[onReady] Found device ${device.sn}: ${device.productName} / ${device.deviceName ?? '<no name>'} (online: ${device.online})`);
+                this.log.info(
+                    `[onReady] Found device ${device.sn}: ${device.productName} / ${device.deviceName ?? '<no name>'} (online: ${device.online})`,
+                );
             } else {
-                this.log.warn(`[onReady] Found unknonwn device ${device.sn}: ${device.productName} / ${device.deviceName ?? '<no name>'} (online: ${device.online})`);
+                this.log.warn(
+                    `[onReady] Found unknonwn device ${device.sn}: ${device.productName} / ${device.deviceName ?? '<no name>'} (online: ${device.online})`,
+                );
             }
 
             const deviceQuota = await ecoFlowApiClient.getDeviceQuota(device.sn);
@@ -120,7 +124,7 @@ class EcoflowIot extends utils.Adapter {
                     native: {},
                 });
 
-                const moduleTypeQuota = Object.keys(deviceQuota).filter((quota) => quota.startsWith(`${config.prefix}.`));
+                const moduleTypeQuota = Object.keys(deviceQuota).filter(quota => quota.startsWith(`${config.prefix}.`));
 
                 for (const quota of moduleTypeQuota) {
                     const valueType = typeof deviceQuota[quota];
@@ -163,8 +167,10 @@ class EcoflowIot extends utils.Adapter {
         const mqttCredentials = await this.getStoredMqttClientCredentials();
 
         this.ecoFlowMqttClient = new EcoflowMqtt.Client(this.log, this.getEcoflowApiClient(), mqttCredentials);
-        this.ecoFlowMqttClient.on('credentialUpdate', (mqttCredentials) => this.updateMqttClientCredentials(mqttCredentials));
-        this.ecoFlowMqttClient.on('newParamsEvent', (sn, moduleType, params) => {
+        this.ecoFlowMqttClient.on('credentialUpdate', mqttCredentials =>
+            this.updateMqttClientCredentials(mqttCredentials),
+        );
+        this.ecoFlowMqttClient.on('newParamsEvent', async (sn, moduleType, params) => {
             for (const [param, val] of Object.entries(params)) {
                 const quotaDescription = this.knownDevices[sn]?.[moduleType]?.[param];
                 if (quotaDescription) {
@@ -173,7 +179,7 @@ class EcoflowIot extends utils.Adapter {
                     if (valueType === 'number' && valueType === quotaDescription.valueType) {
                         this.log.silly(`[MQTT client] Setting ${quotaDescription.objId} to ${val}`);
 
-                        this.setState(quotaDescription.objId, {
+                        await this.setState(quotaDescription.objId, {
                             val: Number(val),
                             ack: true,
                         });
@@ -182,7 +188,7 @@ class EcoflowIot extends utils.Adapter {
             }
         });
 
-        this.ecoFlowMqttClient.init(Object.keys(this.knownDevices));
+        await this.ecoFlowMqttClient.init(Object.keys(this.knownDevices));
 
         await this.subscribeStatesAsync('*');
     }
@@ -249,7 +255,9 @@ class EcoflowIot extends utils.Adapter {
                 const moduleType = stateObj?.native.moduleType;
 
                 if (sn && operateType && moduleType) {
-                    this.log.info(`${idNoNamespace} changed to ${state.val} - perform change of operateType ${operateType}, moduleType ${moduleType} for ${sn}`);
+                    this.log.info(
+                        `${idNoNamespace} changed to ${state.val} - perform change of operateType ${operateType}, moduleType ${moduleType} for ${sn}`,
+                    );
 
                     const operateParams = {
                         [operateParamName]: state.val,
@@ -268,7 +276,11 @@ class EcoflowIot extends utils.Adapter {
                             const testOperateType = obj.value.native?.operateType;
                             const testOperateParamName = obj.value.native?.operateParamName;
 
-                            if (testModuleType == moduleType && testOperateType == operateType && testOperateParamName) {
+                            if (
+                                testModuleType == moduleType &&
+                                testOperateType == operateType &&
+                                testOperateParamName
+                            ) {
                                 const additionalState = await this.getForeignStateAsync(obj.id);
                                 if (additionalState) {
                                     operateParams[testOperateParamName] = additionalState.val;
@@ -286,7 +298,7 @@ class EcoflowIot extends utils.Adapter {
     }
 
     public removeNamespace(id: string): string {
-        const re = new RegExp(this.namespace + '*\\.', 'g');
+        const re = new RegExp(`${this.namespace}*\\.`, 'g');
         return id.replace(re, '');
     }
 

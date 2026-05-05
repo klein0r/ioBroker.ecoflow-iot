@@ -1,6 +1,8 @@
-import axios, { AxiosInstance } from 'axios';
+import type { AxiosInstance } from 'axios';
+import axios from 'axios';
 import crypto from 'node:crypto';
 
+// eslint-disable-next-line @typescript-eslint/no-namespace
 export namespace EcoflowApi {
     export type EcoFlowResponse = {
         code: string;
@@ -40,7 +42,7 @@ export namespace EcoflowApi {
             this.axiosInstance = axios.create({
                 baseURL: 'https://api.ecoflow.com/',
                 timeout: 3000,
-                validateStatus: (status) => {
+                validateStatus: status => {
                     return [200].indexOf(status) > -1;
                 },
                 responseType: 'json',
@@ -49,13 +51,15 @@ export namespace EcoflowApi {
 
         private flattenKeys(obj: Record<string, any>, prefix?: string): Record<string, any> {
             const getPrefix = (k: string): string => {
-                if (!prefix) return k;
+                if (!prefix) {
+                    return k;
+                }
                 return Array.isArray(obj) ? `${prefix}[${k}]` : `${prefix}.${k}`;
             };
 
             let res: Record<string, any> = {};
 
-            Object.keys(obj).forEach((k) => {
+            Object.keys(obj).forEach(k => {
                 if (typeof obj[k] === 'object') {
                     res = { ...res, ...this.flattenKeys(obj[k], getPrefix(k)) };
                 } else {
@@ -66,8 +70,13 @@ export namespace EcoflowApi {
             return res;
         }
 
-        private async apiRequestAsync(method: 'get' | 'post' | 'put', url: string, data?: object): Promise<EcoFlowResponse> {
-            const sha256 = (str: string, key: string): string => crypto.createHmac('sha256', key).update(str).digest('hex');
+        private async apiRequestAsync(
+            method: 'get' | 'post' | 'put',
+            url: string,
+            data?: object,
+        ): Promise<EcoFlowResponse> {
+            const sha256 = (str: string, key: string): string =>
+                crypto.createHmac('sha256', key).update(str).digest('hex');
 
             const nonce = String(100000 + Math.floor(Math.random() * 100000));
             const timestamp = String(Date.now());
@@ -79,7 +88,7 @@ export namespace EcoflowApi {
                 const flatDataKeys = Object.keys(flatData);
                 flatDataKeys.sort();
 
-                dataStr = flatDataKeys.map((k) => `${k}=${flatData[k]}`).join('&') + '&';
+                dataStr = `${flatDataKeys.map(k => `${k}=${flatData[k]}`).join('&')}&`;
             }
 
             const uri = `${dataStr}accessKey=${this.accessKey}&nonce=${nonce}&timestamp=${timestamp}`;
@@ -98,7 +107,9 @@ export namespace EcoflowApi {
                 },
             });
 
-            this.logger.debug(`Received ${apiResponse.status} from ${method} to ${url} (${uri}): ${JSON.stringify(apiResponse.data)}`);
+            this.logger.debug(
+                `Received ${apiResponse.status} from ${method} to ${url} (${uri}): ${JSON.stringify(apiResponse.data)}`,
+            );
 
             if (apiResponse.status === 200 && apiResponse.data.code == 0) {
                 return apiResponse.data;
