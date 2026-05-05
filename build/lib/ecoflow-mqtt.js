@@ -100,7 +100,7 @@ var EcoflowMqtt;
         this.logger.debug(`MQTT Client subscribed to /open/${mqttCredentials.user}/${sn}/set_reply`);
       }
       mqttClient.on("message", (topic, message) => {
-        this.logger.debug(`[MQTT client] Received message on topic ${topic}: ${message}`);
+        this.logger.debug(`[MQTT client] Received message on topic "${topic}": ${message}`);
         for (const sn of snList) {
           if (topic.includes(sn)) {
             try {

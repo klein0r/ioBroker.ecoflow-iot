@@ -14,20 +14,19 @@
                     "label": "Access Key",
                     "xs": 12,
                     "sm": 12,
-                    "md": 12,
-                    "lg": 12,
+                    "md": 6,
+                    "lg": 6,
                     "xl": 6
                 },
                 "secretKey": {
-                    "newLine": true,
                     "type": "password",
                     "repeat": false,
                     "visible": true,
                     "label": "Secret Key",
                     "xs": 12,
                     "sm": 12,
-                    "md": 12,
-                    "lg": 12,
+                    "md": 6,
+                    "lg": 6,
                     "xl": 6
                 },
                 "_headerOptionsSupport": {

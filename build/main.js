@@ -30,6 +30,7 @@ class EcoflowIot extends utils.Adapter {
   ecoFlowApiClient;
   ecoFlowMqttClient;
   knownDevices;
+  knownProductTypes;
   constructor(options = {}) {
     super({
       ...options,
@@ -37,6 +38,27 @@ class EcoflowIot extends utils.Adapter {
     });
     this.apiConnected = false;
     this.knownDevices = {};
+    this.knownProductTypes = [
+      // River
+      "RIVER 2",
+      // untested!
+      "RIVER 2 Pro",
+      "RIVER 2 Max",
+      // untested!
+      "RIVER 3",
+      // untested!
+      // Delta
+      // 'DELTA Pro', // untested! https://developer-eu.ecoflow.com/us/document/deltapro
+      "DELTA Max",
+      // untested!
+      "DELTA 2",
+      // untested! https://developer-eu.ecoflow.com/us/document/delta2
+      "DELTA 2 Max",
+      // untested! https://developer-eu.ecoflow.com/us/document/delta2max
+      "DELTA Pro 3"
+      // untested! https://developer-eu.ecoflow.com/us/document/deltaPro3
+      // 'PowerStream', // untested! https://developer-eu.ecoflow.com/us/document/powerStreamMicroInverter
+    ];
     this.on("ready", this.onReady.bind(this));
     this.on("stateChange", this.onStateChange.bind(this));
     this.on("unload", this.onUnload.bind(this));
@@ -48,7 +70,7 @@ class EcoflowIot extends utils.Adapter {
     return this.ecoFlowApiClient;
   }
   async onReady() {
-    var _a, _b;
+    var _a, _b, _c, _d;
     this.setApiConnected(false);
     if (!this.config.accessKey || !this.config.secretKey) {
       this.log.error(`Access key and/or secret key is empty. Please check instance configuration and restart.`);
@@ -62,7 +84,11 @@ class EcoflowIot extends utils.Adapter {
     const ecoFlowApiClient = this.getEcoflowApiClient();
     const deviceList = await ecoFlowApiClient.getDeviceList();
     for (const device of deviceList) {
-      this.log.debug(`[onReady] Found device ${device.sn}: ${device.productName} (online: ${device.online})`);
+      if (this.knownProductTypes.includes(device.productName)) {
+        this.log.info(`[onReady] Found device ${device.sn}: ${device.productName} / ${(_a = device.deviceName) != null ? _a : "<no name>"} (online: ${device.online})`);
+      } else {
+        this.log.warn(`[onReady] Found unknonwn device ${device.sn}: ${device.productName} / ${(_b = device.deviceName) != null ? _b : "<no name>"} (online: ${device.online})`);
+      }
       const deviceQuota = await ecoFlowApiClient.getDeviceQuota(device.sn);
       const moduleTypes = {
         pd: { moduleType: "1", prefix: "pd" },
@@ -111,13 +137,13 @@ class EcoflowIot extends utils.Adapter {
                 type: "number",
                 read: true,
                 write: false,
-                ...(_a = efState == null ? void 0 : efState.common) != null ? _a : {}
+                ...(_c = efState == null ? void 0 : efState.common) != null ? _c : {}
               },
               native: {
                 sn: device.sn,
                 quota,
                 moduleType: config.moduleType,
-                ...(_b = efState == null ? void 0 : efState.native) != null ? _b : {}
+                ...(_d = efState == null ? void 0 : efState.native) != null ? _d : {}
               }
             });
             await this.setState(objId, { val: deviceQuota[quota], ack: true });

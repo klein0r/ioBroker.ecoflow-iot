@@ -55,8 +55,7 @@ var EcoflowApi;
     }
     flattenKeys(obj, prefix) {
       const getPrefix = (k) => {
-        if (!prefix)
-          return k;
+        if (!prefix) return k;
         return Array.isArray(obj) ? `${prefix}[${k}]` : `${prefix}.${k}`;
       };
       let res = {};
